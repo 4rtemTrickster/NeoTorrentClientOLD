@@ -9,9 +9,9 @@ namespace NTC
 
     void IPCMessageDispatcher::RunImp()
     {
+        std::string Message;
         while (true)
         {
-            std::string Message;
             MessageQueue::PopMessage(Message);
             LOG_MESSAGE("Poped message: " + Message);
             if (Message == "App closes") break;
@@ -59,6 +59,6 @@ namespace NTC
             return;
         }
 
-        FRONTEND_ERROR("Received unknown log level!");
+        NTC_ERROR("Received unknown log level!");
     }
 }

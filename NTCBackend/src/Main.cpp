@@ -12,9 +12,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     {
         NTC::Logger::Init();
         NTC::FrontendProcessLauncher::Launch();
-        
-        DWORD FrontendProcessStatus = NTC::FrontendProcessLauncher::GetStatus();
-        if (FrontendProcessStatus) return FrontendProcessStatus;
+
+        if (NTC::LaunchStatus status = NTC::FrontendProcessLauncher::GetStatus())
+            return status;
         
         auto IPCMD = std::async(std::launch::async, &NTC::IPCMessageDispatcher::Run);
         NTC::IPCController::Run();

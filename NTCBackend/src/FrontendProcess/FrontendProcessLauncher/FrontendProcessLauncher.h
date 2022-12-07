@@ -6,7 +6,7 @@ namespace NTC
     {
     public:
         static void Launch();
-        inline static  DWORD GetStatus() { return Error; }
+        inline static LaunchStatus GetStatus() { return Error; }
     protected:
         
         inline static HINSTANCE FrontendProcessInstance = nullptr;

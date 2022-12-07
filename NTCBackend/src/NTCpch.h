@@ -35,6 +35,8 @@ namespace NTC
     {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
+
+    using LaunchStatus = DWORD;
 }
 
 // Turning on/off logging of recived messages 
