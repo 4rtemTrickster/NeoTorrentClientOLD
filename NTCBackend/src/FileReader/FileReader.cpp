@@ -1,0 +1,37 @@
+﻿#include "NTCpch.h"
+#include "FileReader.h"
+
+#include <filesystem>
+
+namespace NTC
+{
+    std::fstream FileReader::fs_;
+
+    std::string FileReader::ReadFile(const std::filesystem::path& path)
+    {
+        std::string ret{};
+
+        fs_.open(path, std::ios_base::in);
+
+        if (fs_.is_open())
+        {
+            fs_.seekg(0, std::ios_base::end);
+            std::fstream::pos_type fileSize = fs_.tellg();
+
+            if (fileSize == std::fstream::pos_type(-1))
+            {
+                NTC_WARN("Can't get current position of the get pointer!\nFile:" + path.string());
+                return ret;
+            }
+
+            fs_.seekg(0, std::fstream::beg);
+            ret.resize(fileSize + 1ll);
+            fs_.read(const_cast<char*>(ret.c_str()), fileSize);
+            fs_.close();
+        }
+        else
+            NTC_WARN("Can't open file:" + path.string());
+
+        return ret;
+    }
+}
