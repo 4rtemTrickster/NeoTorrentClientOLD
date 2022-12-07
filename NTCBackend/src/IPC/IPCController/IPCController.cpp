@@ -1,7 +1,7 @@
 ﻿#include "NTCpch.h"
 #include "IPCController.h"
 
-#include "IPC/IPCMessageDispatcher/IPCMessageDispatcher.h"
+#include "IPC/MessageQueue/MessageQueue.h"
 
 namespace NTC
 {
@@ -26,8 +26,8 @@ namespace NTC
             zmq::recv_result_t res = socket->recv(request, zmq::recv_flags::none);
             if (res)
             {
-                NTC_INFO("Recived from frontend: " + request.to_string());
-                IPCMessageDispatcher::AddMessage(request.to_string());
+                LOG_MESSAGE("Recived from frontend: " + request.to_string());
+                MessageQueue::AddMessage(request.to_string());
                 socket->send(zmq::buffer(ReceivedStr), zmq::send_flags::none);
             }
             else

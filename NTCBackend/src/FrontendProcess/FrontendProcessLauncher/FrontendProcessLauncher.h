@@ -8,6 +8,7 @@ namespace NTC
         static void Launch();
         inline static  DWORD GetStatus() { return Error; }
     protected:
+        
         inline static HINSTANCE FrontendProcessInstance = nullptr;
         inline static constexpr LPCWSTR exe = L"..\\NTCFrontend\\NTCFrontend.exe";
         inline static DWORD Error = 0;

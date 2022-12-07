@@ -33,3 +33,9 @@ namespace NTC
 #define FRONTEND_WARN(...)       ::NTC::Logger::GetFrontendLogger()->warn(__VA_ARGS__)
 #define FRONTEND_ERROR(...)      ::NTC::Logger::GetFrontendLogger()->error(__VA_ARGS__)
 #define FRONTEND_CRITICAL(...)   ::NTC::Logger::GetFrontendLogger()->critical(__VA_ARGS__)
+
+#ifdef IPC_LOGGING
+    #define LOG_MESSAGE(...)    ::NTC::Logger::GetBackendLogger()->trace(__VA_ARGS__)
+#else
+    #define LOG_MESSAGE(...)
+#endif

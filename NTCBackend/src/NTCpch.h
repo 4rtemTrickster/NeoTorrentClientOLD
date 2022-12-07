@@ -16,10 +16,6 @@
 
 #include <zmq.hpp>
 
-#include "Containers/ThreadSafeQueue/ThreadSafeQueue.h"
-
-using namespace std::chrono_literals;
-
 namespace NTC
 {
     template <typename T>
@@ -39,8 +35,9 @@ namespace NTC
     {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
-
-    using MessageQueue_t = containers::ThreadSafeQueue<std::string>;
 }
+
+// Turning on/off logging of recived messages 
+//#define IPC_LOGGING
 
 #include "Logger/Logger.h"
