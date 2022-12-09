@@ -2,13 +2,17 @@
 
 namespace NTC
 {
-    class FileReader
+    class FileReader final
     {
     public:
         FileReader() = delete;
+        FileReader(const FileReader&) = delete;
+        FileReader(const FileReader&&) = delete;
+        FileReader& operator=(const FileReader&) = delete;
+        FileReader& operator=(const FileReader&&) = delete;
 
         [[nodiscard]]
-        static std::string ReadFile(const std::filesystem::path& path);
+        static Ref<std::string> ReadFile(const std::filesystem::path& path);
 
     protected:
         

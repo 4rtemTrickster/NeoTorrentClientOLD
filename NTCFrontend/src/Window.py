@@ -25,8 +25,9 @@ class MainWindow(QMainWindow):
         self.show()
 
     def _ChDir(self, TextEdit):
-        FileName: str = QFileDialog.getOpenFileName(self, "Select file", "c:\\")
+        FileName: str = QFileDialog.getOpenFileName(self, "Select file", "c:\\", "Torrent files (*.torrent)")
 
         if FileName[0] != "":
             TextEdit.setPlainText(FileName[0])
             self._IPCC.SendMessage(FileName[0])
+            self._IPCC.SendMessage("READ_FILE: " + FileName[0])

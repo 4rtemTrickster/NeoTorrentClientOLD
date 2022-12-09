@@ -1,6 +1,9 @@
 ﻿#include "NTCpch.h"
 #include "IPCMessageDispatcher.h"
 
+#include <filesystem>
+
+#include "FileReader/FileReader.h"
 #include "IPC/MessageQueue/MessageQueue.h"
 
 namespace NTC
@@ -27,6 +30,13 @@ namespace NTC
         std::string_view Prefix(message.c_str(), message.find_first_of(' '));
 
         if (Prefix.starts_with("LOG:")) LogMessageProc(Prefix, message);
+        if (Prefix.starts_with("READ_FILE:"))
+        {
+            auto readed = FileReader::ReadFile(
+                std::filesystem::path(std::string(message.c_str() + Prefix.size() + 1)));
+
+            NTC_INFO("Readed: " + *readed);
+        }
     }
 
     void IPCMessageDispatcher::LogMessageProc(std::string_view prefix, const std::string& message)

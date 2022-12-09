@@ -6,10 +6,10 @@
 namespace NTC
 {
     std::fstream FileReader::fs_;
-
-    std::string FileReader::ReadFile(const std::filesystem::path& path)
+    
+    Ref<std::string> FileReader::ReadFile(const std::filesystem::path& path)
     {
-        std::string ret{};
+        Ref<std::string> ret = CreateRef<std::string>();
 
         fs_.open(path, std::ios_base::in);
 
@@ -25,8 +25,8 @@ namespace NTC
             }
 
             fs_.seekg(0, std::fstream::beg);
-            ret.resize(fileSize + 1ll);
-            fs_.read(const_cast<char*>(ret.c_str()), fileSize);
+            ret->resize(fileSize + 1ll);
+            fs_.read(ret->data(), fileSize);
             fs_.close();
         }
         else
