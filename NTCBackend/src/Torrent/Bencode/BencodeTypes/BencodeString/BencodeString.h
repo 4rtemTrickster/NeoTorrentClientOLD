@@ -8,7 +8,7 @@ namespace NTC
     public:
         BencodeString() : value_(std::string()) {}
 
-        BencodeString(const std::string& value) : value_(value) {}
+        BencodeString(std::string&& value) : value_(std::move(value)) {}
 
         inline const std::string& GetValue() const { return value_; }
         virtual std::string Encode() override;

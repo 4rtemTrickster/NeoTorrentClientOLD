@@ -14,8 +14,8 @@ namespace NTC
 
         std::string::size_type end = encoded.find_first_of('e', index);
 
-        int val = std::stoi(std::string_view(encoded.c_str() + index, end).data());
-
+        int64_t val = std::stoll(std::string_view(encoded.c_str() + index, end).data());
+        
         index = end + 1;
 
         return CreateRef<BencodeInt>(val);

@@ -1,6 +1,8 @@
 ﻿#include "NTCpch.h"
 #include "BencodeList.h"
 
+#include "Torrent/Bencode/BencodeDecoder/BencodeDecoder.h"
+
 namespace NTC
 {
     BencodeList::BencodeList(BList&& list)
@@ -22,6 +24,15 @@ namespace NTC
 
     Ref<BencodeList> BencodeList::Read(const std::string& encoded, std::string::size_type& index)
     {
-        
+        if(encoded.at(index) == 'l') ++index;
+
+        BList list;
+
+        while (encoded.at(index) != 'e')
+            list.push_back(BencodeDecoder::Decode(encoded, index));
+
+        ++index;
+
+        return CreateRef<BencodeList>(std::move(list));
     }
 }

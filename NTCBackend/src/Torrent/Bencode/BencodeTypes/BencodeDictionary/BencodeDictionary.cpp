@@ -1,6 +1,8 @@
 ﻿#include "NTCpch.h"
 #include "BencodeDictionary.h"
 
+#include "Torrent/Bencode/BencodeDecoder/BencodeDecoder.h"
+
 namespace NTC
 {
     BencodeDictionary::BencodeDictionary(BMap&& map)
@@ -26,8 +28,14 @@ namespace NTC
         BMap map;
 
         while (encoded.at(index) != 'e')
-            map.insert(BencodeString::Read(encoded,index), BencodeDecoder::Decode(encoded, index));
+        {
+            Ref<BencodeString> key = BencodeString::Read(encoded,index);
+            Ref<IBencodeElement> value = BencodeDecoder::Decode(encoded, index);
+            map.emplace(key, value);
+        }
 
-        return CreateRef<BencodeDictionary>(map);
+        ++index;
+
+        return CreateRef<BencodeDictionary>(std::move(map));
     }
 }

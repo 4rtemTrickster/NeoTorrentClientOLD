@@ -11,7 +11,7 @@ namespace NTC
     {
         Ref<std::string> ret = CreateRef<std::string>();
 
-        fs_.open(path, std::ios_base::in);
+        fs_.open(path, std::ios_base::in | std::ios_base::binary);
 
         if (fs_.is_open())
         {

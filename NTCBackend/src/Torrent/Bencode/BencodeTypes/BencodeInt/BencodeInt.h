@@ -7,15 +7,15 @@ namespace NTC
     {
     public:
         BencodeInt() : value_(0) {}
-        BencodeInt(int value) : value_(value) {}
+        BencodeInt(int64_t value) : value_(value) {}
 
-        inline int GetValue() const { return value_; }
+        inline int64_t GetValue() const { return value_; }
 
         virtual std::string Encode() override;
 
         static Ref<BencodeInt> Read(const std::string& encoded, std::string::size_type& index);
 
     protected:
-        int value_;
+        int64_t value_;
     };
 }

@@ -10,11 +10,16 @@ namespace NTC
 
     Ref<BencodeString> BencodeString::Read(const std::string& encoded, std::string::size_type& index)
     {
-        std::string::size_type colonIndex = encoded.find_first_of(':', index);
-        std::string::size_type length = std::stoi(std::string_view(encoded.c_str() + index, colonIndex).data());
+        std::string::size_type colonIndex = encoded.find(':', index);
+        std::string size_str(std::string_view(encoded.c_str() + index, encoded.c_str() + colonIndex));
+        std::string::size_type length = std::stoi(size_str);
 
         index = colonIndex + 1;
 
-        return CreateRef<BencodeString>(std::string_view(encoded.c_str() + index, length));
+        std::string res(std::string_view(encoded.c_str() + index, length));
+
+        index = index + length;
+
+        return CreateRef<BencodeString>(std::move(res));
     }
 }

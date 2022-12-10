@@ -5,6 +5,7 @@
 
 #include "FileReader/FileReader.h"
 #include "IPC/MessageQueue/MessageQueue.h"
+#include "Torrent/Bencode/BencodeDecoder/BencodeDecoder.h"
 
 namespace NTC
 {
@@ -12,17 +13,24 @@ namespace NTC
 
     void IPCMessageDispatcher::RunImp()
     {
-        std::string Message;
-        while (true)
+        try
         {
-            MessageQueue::PopMessage(Message);
-            LOG_MESSAGE("Poped message: " + Message);
-            if (Message == "App closes") break;
+            std::string Message;
+            while (true)
+            {
+                MessageQueue::PopMessage(Message);
+                LOG_MESSAGE("Poped message: " + Message);
+                if (Message == "App closes") break;
 
-            MessageProc(Message);
+                MessageProc(Message);
+            }
+
+            NTC_TRACE("Message dispatching is ended");
         }
-
-        NTC_TRACE("Message dispatching is ended");
+        catch (std::exception& exception)
+        {
+            NTC_CRITICAL(exception.what());
+        }
     }
 
     void IPCMessageDispatcher::MessageProc(const std::string& message)
@@ -35,7 +43,9 @@ namespace NTC
             auto readed = FileReader::ReadFile(
                 std::filesystem::path(std::string(message.c_str() + Prefix.size() + 1)));
 
-            NTC_INFO("Readed: " + *readed);
+            std::string::size_type index = 0;
+            
+            auto dec = BencodeDecoder::Decode(*readed, index);
         }
     }
 
