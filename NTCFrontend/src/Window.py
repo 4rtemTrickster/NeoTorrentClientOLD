@@ -1,33 +1,23 @@
-from PyQt5.QtWidgets import QMainWindow, QPushButton, QTextEdit, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QTextEdit, QFileDialog, QAction, QMenuBar, QMenu
 from PyQt5 import uic
 
 from IPCController import *
 
 
-class MainWindow(QMainWindow):
+class mainWindow(QMainWindow):
     def __init__(self, IPCC: IPCController):
-        super(MainWindow, self).__init__()
+        super(mainWindow, self).__init__()
 
         self._IPCC: IPCController = IPCC
 
         uic.loadUi("../Res/Main.ui", self)
 
-        self.SelectPathPushButton = self.findChild(QPushButton, "SelectPathPushButton")
-
-        self.SelectPathPushButton2 = self.findChild(QPushButton, "SelectPathPushButton_2")
-
-        self.SepentPathTextEdit = self.findChild(QTextEdit, "SepentPathTextEdit")
-        self.NeitPathTextEdit = self.findChild(QTextEdit, "NeitPathTextEdit")
-
-        self.SelectPathPushButton.clicked.connect(lambda: self._ChDir(self.SepentPathTextEdit))
-        self.SelectPathPushButton2.clicked.connect(lambda: self._ChDir(self.NeitPathTextEdit))
+        self.actionAdd_torrent.triggered.connect(self._AddTorrent)
 
         self.show()
 
-    def _ChDir(self, TextEdit):
+    def _AddTorrent(self):
         FileName: str = QFileDialog.getOpenFileName(self, "Select file", "c:\\", "Torrent files (*.torrent)")
 
         if FileName[0] != "":
-            TextEdit.setPlainText(FileName[0])
-            self._IPCC.SendMessage(FileName[0])
             self._IPCC.SendMessage("READ_FILE: " + FileName[0])

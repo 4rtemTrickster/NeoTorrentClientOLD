@@ -8,6 +8,12 @@
 
 namespace NTC
 {
+    Ref<IBencodeElement> BencodeDecoder::Decode(const std::string& encoded)
+    {
+        std::string::size_type index = 0;
+        return Decode(encoded, index);
+    }
+
     Ref<IBencodeElement> BencodeDecoder::Decode(const std::string& encoded, std::string::size_type& index)
     {
         switch (encoded.at(index))

@@ -11,7 +11,7 @@ class FrontedApp:
         self.app = QtWidgets.QApplication(sys.argv)
         self.app.aboutToQuit.connect(self._ATQ)
 
-        self._Window = MainWindow(self._IPCC)
+        self._Window = mainWindow(self._IPCC)
 
         self._IPCC.SendLogMessage("Frontend app initialized successful")
 

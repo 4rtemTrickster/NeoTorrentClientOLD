@@ -42,10 +42,8 @@ namespace NTC
         {
             auto readed = FileReader::ReadFile(
                 std::filesystem::path(std::string(message.c_str() + Prefix.size() + 1)));
-
-            std::string::size_type index = 0;
             
-            auto dec = BencodeDecoder::Decode(*readed, index);
+            auto dec = BencodeDecoder::Decode(*readed);
         }
     }
 
