@@ -3,7 +3,6 @@
 #include "FrontendProcess/FrontendProcessLauncher/FrontendProcessLauncher.h"
 #include "IPC/IPCController/IPCController.h"
 #include "IPC/IPCMessageDispatcher/IPCMessageDispatcher.h"
-#include "Logger/Logger.h"
 
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int cmdShow)
