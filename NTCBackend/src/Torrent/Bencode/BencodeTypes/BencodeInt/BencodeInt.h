@@ -8,6 +8,7 @@ namespace NTC
     public:
         BencodeInt() : value_(0) {}
         BencodeInt(int64_t value) : value_(value) {}
+        virtual ~BencodeInt() override = default;
 
         inline int64_t GetValue() const { return value_; }
 

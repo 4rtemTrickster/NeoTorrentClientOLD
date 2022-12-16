@@ -22,4 +22,76 @@ namespace NTC
 
         return CreateRef<BencodeString>(std::move(res));
     }
+
+    bool operator<(const BencodeString& lhs, const BencodeString& rhs)
+    {
+        return lhs.value_ < rhs.value_;
+    }
+
+    bool operator<=(const BencodeString& lhs, const BencodeString& rhs)
+    {
+        return !(rhs < lhs);
+    }
+
+    bool operator>(const BencodeString& lhs, const BencodeString& rhs)
+    {
+        return rhs < lhs;
+    }
+
+    bool operator>=(const BencodeString& lhs, const BencodeString& rhs)
+    {
+        return !(lhs < rhs);
+    }
+
+    bool operator<(const BencodeString& lhs, const std::string& rhs)
+    {
+        return lhs.value_ < rhs;
+    }
+
+    bool operator<=(const BencodeString& lhs, const std::string& rhs)
+    {
+        return !(rhs < lhs);
+    }
+
+    bool operator>(const BencodeString& lhs, const std::string& rhs)
+    {
+        return rhs < lhs;
+    }
+
+    bool operator>=(const BencodeString& lhs, const std::string& rhs)
+    {
+        return !(lhs < rhs);
+    }
+
+    bool operator==(const BencodeString& lhs, const BencodeString& rhs)
+    {
+        return lhs.value_ == rhs.value_;
+    }
+
+    bool operator==(const BencodeString& lhs, const std::string& rhs)
+    {
+        return lhs.value_ == rhs;
+    }
+
+    bool operator!=(const BencodeString& lhs, const BencodeString& rhs)
+    {
+        return !(lhs == rhs);
+    }
+
+    bool operator!=(const BencodeString& lhs, const std::string& rhs)
+    {
+        return !(lhs == rhs);
+    }
+
+    std::size_t BencodeString::operator()(const BencodeString& k) const
+    {
+        return hash_value(k);
+    }
+
+    std::size_t hash_value(const BencodeString& obj)
+    {
+        std::size_t seed = 0x491D352D;
+        boost::hash_combine(seed, obj.value_);
+        return seed;
+    }
 }

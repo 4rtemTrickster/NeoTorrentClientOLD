@@ -9,6 +9,20 @@ namespace NTC
     ITorrentFile::ITorrentFile(std::string&& announce, std::vector<Hash_t>&& pieceHashes, int64_t pieceLength)
         : Announce_(std::move(announce)), PieceLength_(pieceLength), PieceHashes_(std::move(pieceHashes)) {}
 
+    // ITorrentFile::ITorrentFile(ITorrentFile&& other) noexcept
+    //     : Announce_(std::move(other.Announce_)),
+    //       InfoHash_(std::move(other.InfoHash_)),
+    //       AnnounceList_(std::move(other.AnnounceList_)),
+    //       CreationDate_(other.CreationDate_),
+    //       Comment_(std::move(other.Comment_)),
+    //       CreatedBy_(std::move(other.CreatedBy_)),
+    //       Encoding_(std::move(other.Encoding_)),
+    //       
+    // {
+    //     other.CreationDate_ = 0;
+    // }
+
+
 #pragma region Setters
     void ITorrentFile::SetInfoHash(Hash_t& infoHash) { InfoHash_ = infoHash; }
 

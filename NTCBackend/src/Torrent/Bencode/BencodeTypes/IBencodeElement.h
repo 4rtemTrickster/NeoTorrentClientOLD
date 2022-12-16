@@ -5,7 +5,7 @@ namespace NTC
     class IBencodeElement
     {
     public:
-        virtual ~IBencodeElement() = default;
+        virtual ~IBencodeElement() {}
         virtual std::string Encode() = 0;
     };
 }

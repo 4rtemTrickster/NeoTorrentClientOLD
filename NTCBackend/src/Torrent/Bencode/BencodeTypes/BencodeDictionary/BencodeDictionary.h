@@ -4,13 +4,15 @@
 
 namespace NTC
 {
-    using BMap = std::unordered_map<Ref<BencodeString>, Ref<IBencodeElement>>;
+    using BMap = std::unordered_map<BencodeString, Ref<IBencodeElement>, BencodeString>;
     
     class BencodeDictionary : public IBencodeElement
     {
     public:
         BencodeDictionary() = default;
         BencodeDictionary(BMap&& map);
+
+        virtual ~BencodeDictionary() override = default;
 
         inline const BMap& GetValue() const { return Map_; }
 

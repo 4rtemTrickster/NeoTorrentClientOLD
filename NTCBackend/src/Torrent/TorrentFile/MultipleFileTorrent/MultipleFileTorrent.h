@@ -13,27 +13,31 @@ namespace NTC
             std::string Md5Sum_;
             std::list<std::string> Path_;
 
-            file(int64_t length, const std::string& md5sum, std::list<std::string>& path);
-            file(int64_t length, std::string&& md5sum, std::list<std::string>&& path);
+            file(int64_t length, std::list<std::string>& path);
+            file(int64_t length, std::list<std::string>&& path);
 
             file(const file& other) = default;
             file(file&& other) noexcept;
+
+            ~file() = default;
         };
         
     public:
+        using Parent = ITorrentFile;
+        
         MultipleFileTorrent(
             const std::string& announce,
             int64_t pieceLength,
             const std::vector<Hash_t>& pieceHashes,
             const std::string& name,
-            const file& files);
+            const std::list<file>& files);
 
         MultipleFileTorrent(
             std::string&& announce,
             int64_t pieceLength,
             std::vector<Hash_t>&& pieceHashes,
             std::string&& name,
-            file&& files);
+            std::list<file>&& files);
 
         [[nodiscard]]
         virtual const std::string& GetName() const override { return Name_; }

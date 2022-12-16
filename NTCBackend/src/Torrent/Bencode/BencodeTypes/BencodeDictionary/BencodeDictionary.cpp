@@ -14,7 +14,7 @@ namespace NTC
         
         ret.append("d");
         for (auto& [key, value] : Map_)
-            ret.append(key->Encode() + value->Encode());
+            ret.append(key.GetValue() + value->Encode());
 
         ret.append("e");
 
@@ -31,7 +31,7 @@ namespace NTC
         {
             Ref<BencodeString> key = BencodeString::Read(encoded,index);
             Ref<IBencodeElement> value = BencodeDecoder::Decode(encoded, index);
-            map.emplace(key, value);
+            map.emplace(*key, value);
         }
 
         ++index;

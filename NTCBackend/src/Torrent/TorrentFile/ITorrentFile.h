@@ -8,13 +8,6 @@ namespace NTC
     class ITorrentFile
     {
     public:
-        virtual ~ITorrentFile() = delete;
-
-        ITorrentFile(const ITorrentFile&) = delete;
-        ITorrentFile(ITorrentFile&&) = delete;
-        ITorrentFile& operator=(const ITorrentFile&) = delete;
-        ITorrentFile& operator=(ITorrentFile&&) = delete;
-
 #pragma region Getters
         [[nodiscard]]
         virtual const std::string& GetName() const = 0;
@@ -73,6 +66,11 @@ namespace NTC
     protected:
         ITorrentFile(const std::string& announce, const std::vector<Hash_t>& pieceHashes, int64_t pieceLength);
         ITorrentFile(std::string&& announce, std::vector<Hash_t>&& pieceHashes, int64_t pieceLength);
+        ITorrentFile(const ITorrentFile& other) = delete;
+        ITorrentFile(ITorrentFile&& other) = delete;
+        ITorrentFile& operator=(const ITorrentFile&) = delete;
+        ITorrentFile& operator=(ITorrentFile&&) = delete;
+        virtual ~ITorrentFile() = default;
 
         std::string Announce_;
         Hash_t InfoHash_ = {};

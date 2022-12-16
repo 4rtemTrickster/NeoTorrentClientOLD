@@ -30,10 +30,7 @@ namespace NTC
 
         [[nodiscard]]
         const std::string& GetMd5Sum() const { return Md5Sum; }
-
-
-        virtual void SetName(const std::string& name) override;
-        virtual void SetName(std::string&& name) override;
+        
 
         void SetMd5Sum(const std::string& md5sum);
         void SetMd5Sum(std::string&& md5sum);

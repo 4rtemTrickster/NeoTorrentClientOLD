@@ -6,6 +6,8 @@
 #include "FileReader/FileReader.h"
 #include "IPC/MessageQueue/MessageQueue.h"
 #include "Torrent/Bencode/BencodeDecoder/BencodeDecoder.h"
+#include "Torrent/Bencode/BencodeTypes/BencodeDictionary/BencodeDictionary.h"
+#include "Torrent/TorrentFileFactory/TorrentFileFactory.h"
 
 namespace NTC
 {
@@ -42,8 +44,10 @@ namespace NTC
         {
             auto readed = FileReader::ReadFile(
                 std::filesystem::path(std::string(message.c_str() + Prefix.size() + 1)));
-            
-            auto dec = BencodeDecoder::Decode(*readed);
+
+            Ref<BencodeDictionary> dic = std::dynamic_pointer_cast<BencodeDictionary>(BencodeDecoder::Decode(*readed));
+
+            TorrentFileFactory::CreateTorrentFile(dic);
         }
     }
 

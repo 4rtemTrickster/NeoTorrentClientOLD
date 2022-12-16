@@ -7,6 +7,7 @@
 #include <string>
 #include <queue>
 #include <list>
+#include <unordered_map>
 
 #include <thread>
 #include <mutex>

@@ -10,6 +10,7 @@ namespace NTC
     public:
         BencodeList() = default;
         BencodeList(BList&& list);
+        virtual ~BencodeList() override = default;
 
         inline const BList& GetValue() const { return List_; }
 
