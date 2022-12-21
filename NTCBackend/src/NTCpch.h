@@ -17,8 +17,13 @@
 
 #include <zmq.hpp>
 
+#include <boost/optional/optional.hpp>
+
 namespace NTC
 {
+    template<class T, class U>
+    concept Derived = std::is_base_of_v<U, T>;
+    
     template <typename T>
     using Scope = std::unique_ptr<T>;
 
@@ -28,6 +33,7 @@ namespace NTC
         return std::make_unique<T>(std::forward<Args>(args)...);
     }
 
+ 
     template <typename T>
     using Ref = std::shared_ptr<T>;
 
@@ -35,6 +41,12 @@ namespace NTC
     constexpr Ref<T> CreateRef(Args&& ... args)
     {
         return std::make_shared<T>(std::forward<Args>(args)...);
+    }
+    
+    template <typename T, typename ... Args>
+    constexpr Ref<T> DynamicCast(Args&& ... args)
+    {
+        return std::dynamic_pointer_cast<T>(std::forward<Args>(args)...);
     }
 
     using LaunchStatus = DWORD;

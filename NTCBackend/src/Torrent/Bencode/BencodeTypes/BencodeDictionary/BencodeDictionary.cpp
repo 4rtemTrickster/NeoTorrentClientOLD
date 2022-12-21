@@ -8,6 +8,21 @@ namespace NTC
     BencodeDictionary::BencodeDictionary(BMap&& map)
         : Map_(std::move(map)) {}
 
+    Ref<IBencodeElement> BencodeDictionary::operator[](const std::string& key)
+    {
+        return at(key);
+    }
+
+    Ref<IBencodeElement> BencodeDictionary::at(const std::string& key)
+    {
+        if(Map_.contains(key))
+            return Map_.at(key);
+
+        NTC_WARN("Attempt to access an element that does not exist in dictionary by key: " + key);
+        
+        return {};
+    }
+
     std::string BencodeDictionary::Encode()
     {
         std::string ret;

@@ -6,7 +6,9 @@ namespace NTC
     
     class MultipleFileTorrent : public ITorrentFile
     {
-    protected:
+    public:
+        using Parent = ITorrentFile;
+
         struct file
         {
             int64_t Length_;
@@ -20,10 +22,16 @@ namespace NTC
             file(file&& other) noexcept;
 
             ~file() = default;
+
+            [[nodiscard]]
+            inline const std::string& GetMd5Sum() const { return Md5Sum_; }
+
+            [[nodiscard]]
+            inline std::string& GetMd5Sum() { return Md5Sum_; }
+
+            inline void SetMd5Sum(const std::string& md5sum) { Md5Sum_ = md5sum; }
+            inline void SetMd5Sum(std::string&& md5sum) { Md5Sum_ = std::move(md5sum); }
         };
-        
-    public:
-        using Parent = ITorrentFile;
         
         MultipleFileTorrent(
             const std::string& announce,

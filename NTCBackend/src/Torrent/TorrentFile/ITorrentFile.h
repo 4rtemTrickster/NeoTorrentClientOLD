@@ -8,7 +8,7 @@ namespace NTC
     class ITorrentFile
     {
     public:
-#pragma region Getters
+        #pragma region Getters
         [[nodiscard]]
         virtual const std::string& GetName() const = 0;
 
@@ -41,9 +41,9 @@ namespace NTC
 
         [[nodiscard]]
         const std::vector<Hash_t>& GetPieceHashes() const { return PieceHashes_; }
-#pragma endregion Getters
+        #pragma endregion Getters
 
-#pragma region Setters
+        #pragma region Setters
         void SetInfoHash(Hash_t& infoHash);
 
         void SetAnnounceList(const AnnounceList_t& announceList);
@@ -61,7 +61,7 @@ namespace NTC
         void SetEncoding(std::string&& encoding);
 
         void SetPrivate(int64_t inPrivate);
-#pragma endregion Setters
+        #pragma endregion Setters
 
     protected:
         ITorrentFile(const std::string& announce, const std::vector<Hash_t>& pieceHashes, int64_t pieceLength);
@@ -76,9 +76,9 @@ namespace NTC
         Hash_t InfoHash_ = {};
         AnnounceList_t AnnounceList_;
         int64_t CreationDate_ = 0;
-        std::string Comment_ = "";
-        std::string CreatedBy_ = "";
-        std::string Encoding_ = "";
+        std::string Comment_;
+        std::string CreatedBy_;
+        std::string Encoding_;
 
         int64_t PieceLength_;
         int64_t Private_;

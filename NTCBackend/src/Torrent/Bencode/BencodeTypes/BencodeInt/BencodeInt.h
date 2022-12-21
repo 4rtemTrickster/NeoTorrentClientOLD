@@ -6,11 +6,14 @@ namespace NTC
     class BencodeInt : public IBencodeElement
     {
     public:
+        using value_type = int64_t;
+        
         BencodeInt() : value_(0) {}
         BencodeInt(int64_t value) : value_(value) {}
         virtual ~BencodeInt() override = default;
 
-        inline int64_t GetValue() const { return value_; }
+        inline const int64_t& GetValue() const { return value_; }
+        inline int64_t& GetValue() { return value_; }
 
         virtual std::string Encode() override;
 
