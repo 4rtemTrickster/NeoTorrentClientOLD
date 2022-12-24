@@ -15,10 +15,10 @@ namespace NTC
 
     void IPCMessageDispatcher::RunImp()
     {
-        try
+        std::string Message;
+        while (true)
         {
-            std::string Message;
-            while (true)
+            try
             {
                 MessageQueue::PopMessage(Message);
                 LOG_MESSAGE("Poped message: " + Message);
@@ -26,13 +26,13 @@ namespace NTC
 
                 MessageProc(Message);
             }
+            catch (std::exception& exception)
+            {
+                NTC_CRITICAL(exception.what());
+            }
+        }
 
-            NTC_TRACE("Message dispatching is ended");
-        }
-        catch (std::exception& exception)
-        {
-            NTC_CRITICAL(exception.what());
-        }
+        NTC_TRACE("Message dispatching is ended");
     }
 
     void IPCMessageDispatcher::MessageProc(const std::string& message)
@@ -47,7 +47,9 @@ namespace NTC
 
             Ref<BencodeDictionary> dic = std::dynamic_pointer_cast<BencodeDictionary>(BencodeDecoder::Decode(*readed));
 
-            TorrentFileFactory::CreateTorrentFile(dic);
+            auto f = TorrentFileFactory::CreateTorrentFile(dic);
+
+            f;
         }
     }
 

@@ -22,6 +22,11 @@ namespace NTC
         return ret;
     }
 
+    void BencodeList::Accept(Ref<IBencodeVisitor>& visitor)
+    {
+        visitor->VistitList(CreateRef<BencodeList>(*this));
+    }
+
     Ref<BencodeList> BencodeList::Read(const std::string& encoded, std::string::size_type& index)
     {
         if(encoded.at(index) == 'l') ++index;

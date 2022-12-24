@@ -8,6 +8,11 @@ namespace NTC
         return std::to_string(value_.length()) + ":" + value_;
     }
 
+    void BencodeString::Accept(Ref<IBencodeVisitor>& visitor)
+    {
+        visitor->VisitString(CreateRef<BencodeString>(*this));
+    }
+
     Ref<BencodeString> BencodeString::Read(const std::string& encoded, std::string::size_type& index)
     {
         std::string::size_type colonIndex = encoded.find(':', index);

@@ -25,4 +25,3 @@ class FrontedApp:
 if __name__ == "__main__":
     App = FrontedApp()
     sys.exit(App.exec())
-

@@ -19,8 +19,10 @@ namespace NTC
         [[nodiscard]]
         inline const std::string& GetValue() const { return value_; }
         inline std::string& GetValue() { return value_; }
-
+        
         virtual std::string Encode() override;
+
+        virtual void Accept(Ref<IBencodeVisitor>& visitor) override;
 
         static Ref<BencodeString> Read(const std::string& encoded, std::string::size_type& index);
 

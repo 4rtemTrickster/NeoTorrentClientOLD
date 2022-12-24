@@ -24,5 +24,4 @@ namespace NTC
         Ref<zmq::context_t> cont;
         Ref<zmq::socket_t> socket;
     };
-    
 }

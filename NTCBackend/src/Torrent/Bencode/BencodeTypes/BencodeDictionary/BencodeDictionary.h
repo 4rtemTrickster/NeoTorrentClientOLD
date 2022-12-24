@@ -5,8 +5,6 @@
 
 namespace NTC
 {
-    using BMap = std::unordered_map<BencodeString, Ref<IBencodeElement>, BencodeString>;
-    
     class BencodeDictionary : public IBencodeElement
     {
     public:
@@ -26,6 +24,8 @@ namespace NTC
         inline bool contains(const BMap::key_type& key) const { return Map_.contains(key); }
 
         virtual std::string Encode() override;
+
+        virtual void Accept(Ref<IBencodeVisitor>& visitor) override;
 
         static Ref<BencodeDictionary> Read(const std::string& encoded, std::string::size_type& index);
 

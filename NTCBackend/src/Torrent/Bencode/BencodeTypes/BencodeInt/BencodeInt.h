@@ -17,6 +17,8 @@ namespace NTC
 
         virtual std::string Encode() override;
 
+        virtual void Accept(Ref<IBencodeVisitor>& visitor) override;
+
         static Ref<BencodeInt> Read(const std::string& encoded, std::string::size_type& index);
 
     protected:

@@ -36,6 +36,11 @@ namespace NTC
         return ret;
     }
 
+    void BencodeDictionary::Accept(Ref<IBencodeVisitor>& visitor)
+    {
+        visitor->VistDictionary(CreateRef<BencodeDictionary>(*this));
+    }
+
     Ref<BencodeDictionary> BencodeDictionary::Read(const std::string& encoded, std::string::size_type& index)
     {
         if (encoded.at(index) == 'd') ++index;

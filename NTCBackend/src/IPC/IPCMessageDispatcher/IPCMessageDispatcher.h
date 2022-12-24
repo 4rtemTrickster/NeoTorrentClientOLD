@@ -25,5 +25,4 @@ namespace NTC
 
         static IPCMessageDispatcher Instance;
     };
-    
 }

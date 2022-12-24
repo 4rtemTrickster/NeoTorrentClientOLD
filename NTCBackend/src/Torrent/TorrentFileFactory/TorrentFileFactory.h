@@ -18,24 +18,14 @@ namespace NTC
     private:
         static Ref<std::vector<Hash_t>> SeparatePiecesStr(std::string& pieces);
         
-        template <Derived<IBencodeElement> T>
-        static boost::optional<typename T::value_type&> TryGetValue(Ref<BencodeDictionary>& dic, const std::string& key);
+        static inline boost::optional<std::string&> TryGetStringValue(Ref<BencodeDictionary>& dic, const std::string& key);
+        static inline boost::optional<std::string&> TryGetStringValue(Ref<IBencodeElement>& element);
+        static inline boost::optional<int64_t&> TryGetIntValue(Ref<BencodeDictionary>& dic, const std::string& key);
+        static inline boost::optional<int64_t&> TryGetIntValue(Ref<IBencodeElement>& element);
+        static inline Ref<BencodeList> TryGetListValue(Ref<BencodeDictionary>& dic, const std::string& key);
+        static inline Ref<BencodeDictionary> TryGetDictionaryValue(Ref<BencodeDictionary>& dic, const std::string& key);
+        static inline Ref<BencodeDictionary> TryGetDictionaryValue(Ref<IBencodeElement>& element);
+
+        static Ref<IBencodeVisitor> visitor_;
     };
-
-    template <Derived<IBencodeElement> T>
-    boost::optional<typename T::value_type&> TorrentFileFactory::TryGetValue(Ref<BencodeDictionary>& dic,
-                                                                             const std::string& key)
-    {
-        if(auto elem = dic->at(key))
-        {
-            if(Ref<T> casted = DynamicCast<T>(elem))
-                return boost::optional<typename T::value_type&>(casted->GetValue());
-            else
-                NTC_WARN("Element by key: " + key + " incorrect cast type");
-        }
-        else
-            NTC_WARN("Element by key:" + key + " does not exist");
-
-        return {};
-    }
 }

@@ -3,8 +3,6 @@
 
 namespace NTC
 {
-    using BList = std::list<Ref<IBencodeElement>>;
-    
     class BencodeList : public IBencodeElement
     {
     public:
@@ -20,6 +18,8 @@ namespace NTC
         inline BList& GetValue() { return List_; }
 
         virtual std::string Encode() override;
+
+        virtual void Accept(Ref<IBencodeVisitor>& visitor) override;
 
         inline iterator begin() noexcept { return List_.begin(); }
         inline const_iterator begin() const noexcept { return List_.cbegin(); }

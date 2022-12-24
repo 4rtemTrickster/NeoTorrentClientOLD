@@ -8,6 +8,11 @@ namespace NTC
         return "i" + std::to_string(value_) + "e";
     }
 
+    void BencodeInt::Accept(Ref<IBencodeVisitor>& visitor)
+    {
+        visitor->VisitInt(CreateRef<BencodeInt>(*this));
+    }
+
     Ref<BencodeInt> BencodeInt::Read(const std::string& encoded, std::string::size_type& index)
     {
         if(encoded.at(index) == 'i') ++index;
