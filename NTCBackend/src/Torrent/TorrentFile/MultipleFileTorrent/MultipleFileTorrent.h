@@ -36,14 +36,14 @@ namespace NTC
         MultipleFileTorrent(
             const std::string& announce,
             int64_t pieceLength,
-            const std::vector<Hash_t>& pieceHashes,
+            Ref<std::vector<Hash_t>> pieceHashes,
             const std::string& name,
             const std::list<file>& files);
 
         MultipleFileTorrent(
             std::string&& announce,
             int64_t pieceLength,
-            std::vector<Hash_t>&& pieceHashes,
+            Ref<std::vector<Hash_t>>&& pieceHashes,
             std::string&& name,
             std::list<file>&& files);
 

@@ -26,7 +26,7 @@ namespace NTC
 
     void BencodeVisitor::VistitList(Ref<BencodeList> blist)
     {
-        intValue = 0;
+        intValue = nullptr;
         dictionaryValue = nullptr;
         stringValue = nullptr;
         listValue = blist;

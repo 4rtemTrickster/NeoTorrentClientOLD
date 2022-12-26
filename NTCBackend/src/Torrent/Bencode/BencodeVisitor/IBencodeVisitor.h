@@ -11,16 +11,6 @@ namespace NTC
     class IBencodeVisitor
     {
     public:
-        enum class DataType : uint8_t
-        {
-            NONE = 0,
-
-            INT,
-            STRING,
-            LIST,
-            DICTIONARY
-        };
-        
         virtual ~IBencodeVisitor() = default;
 
         virtual void VisitString(Ref<BencodeString> bstr) = 0;
@@ -32,9 +22,5 @@ namespace NTC
         virtual Ref<BencodeString> GetStringValue() = 0;
         virtual Ref<BencodeList> GetListValue() = 0;
         virtual Ref<BencodeDictionary> GetDictionaryValue() = 0;
-        inline DataType GetDataType() const { return dataType_; }
-
-    protected:
-        DataType dataType_ = DataType::NONE;
     };
 }

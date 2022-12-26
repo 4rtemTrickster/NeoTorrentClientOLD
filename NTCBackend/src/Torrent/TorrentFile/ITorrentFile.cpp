@@ -3,24 +3,11 @@
 
 namespace NTC
 {
-    ITorrentFile::ITorrentFile(const std::string& announce, const std::vector<Hash_t>& pieceHashes, int64_t pieceLength)
+    ITorrentFile::ITorrentFile(const std::string& announce, Ref<std::vector<Hash_t>> pieceHashes, int64_t pieceLength)
         : Announce_(announce), PieceLength_(pieceLength), PieceHashes_(pieceHashes) {}
 
-    ITorrentFile::ITorrentFile(std::string&& announce, std::vector<Hash_t>&& pieceHashes, int64_t pieceLength)
+    ITorrentFile::ITorrentFile(std::string&& announce, Ref<std::vector<Hash_t>>&& pieceHashes, int64_t pieceLength)
         : Announce_(std::move(announce)), PieceLength_(pieceLength), PieceHashes_(std::move(pieceHashes)) {}
-
-    // ITorrentFile::ITorrentFile(ITorrentFile&& other) noexcept
-    //     : Announce_(std::move(other.Announce_)),
-    //       InfoHash_(std::move(other.InfoHash_)),
-    //       AnnounceList_(std::move(other.AnnounceList_)),
-    //       CreationDate_(other.CreationDate_),
-    //       Comment_(std::move(other.Comment_)),
-    //       CreatedBy_(std::move(other.CreatedBy_)),
-    //       Encoding_(std::move(other.Encoding_)),
-    //       
-    // {
-    //     other.CreationDate_ = 0;
-    // }
 
 
 #pragma region Setters

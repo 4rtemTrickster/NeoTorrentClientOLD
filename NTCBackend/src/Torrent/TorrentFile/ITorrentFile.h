@@ -8,6 +8,11 @@ namespace NTC
     class ITorrentFile
     {
     public:
+        ITorrentFile(const ITorrentFile& other) = delete;
+        ITorrentFile(ITorrentFile&& other) = delete;
+        ITorrentFile& operator=(const ITorrentFile&) = delete;
+        ITorrentFile& operator=(ITorrentFile&&) = delete;
+
         #pragma region Getters
         [[nodiscard]]
         virtual const std::string& GetName() const = 0;
@@ -40,7 +45,7 @@ namespace NTC
         const int64_t& GetPrivate() const { return Private_; }
 
         [[nodiscard]]
-        const std::vector<Hash_t>& GetPieceHashes() const { return PieceHashes_; }
+        Ref<std::vector<Hash_t>> GetPieceHashes() { return PieceHashes_; }
         #pragma endregion Getters
 
         #pragma region Setters
@@ -64,12 +69,8 @@ namespace NTC
         #pragma endregion Setters
 
     protected:
-        ITorrentFile(const std::string& announce, const std::vector<Hash_t>& pieceHashes, int64_t pieceLength);
-        ITorrentFile(std::string&& announce, std::vector<Hash_t>&& pieceHashes, int64_t pieceLength);
-        ITorrentFile(const ITorrentFile& other) = delete;
-        ITorrentFile(ITorrentFile&& other) = delete;
-        ITorrentFile& operator=(const ITorrentFile&) = delete;
-        ITorrentFile& operator=(ITorrentFile&&) = delete;
+        ITorrentFile(const std::string& announce, Ref<std::vector<Hash_t>> pieceHashes, int64_t pieceLength);
+        ITorrentFile(std::string&& announce, Ref<std::vector<Hash_t>>&& pieceHashes, int64_t pieceLength);
         virtual ~ITorrentFile() = default;
 
         std::string Announce_;
@@ -82,6 +83,6 @@ namespace NTC
 
         int64_t PieceLength_;
         int64_t Private_;
-        std::vector<Hash_t> PieceHashes_;
+        Ref<std::vector<Hash_t>> PieceHashes_;
     };
 }
