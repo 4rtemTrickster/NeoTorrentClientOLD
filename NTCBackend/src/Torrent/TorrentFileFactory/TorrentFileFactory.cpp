@@ -28,42 +28,14 @@ namespace NTC
         Ref<std::string> name = TryGetStringValue(InfoDic, "name");
         Ref<std::vector<Hash_t>> piecesHashes;
         if (pieces != nullptr) piecesHashes = SeparatePiecesStr(pieces);
-
-
-        Ref<ITorrentFile> toReturn;
+        
 
         if (InfoDic->contains("files"))
-            toReturn = CreateMultipleFileTorrent(InfoDic, announce, pieceLength, name, piecesHashes);
+            return CreateMultipleFileTorrent(InfoDic, announce, pieceLength, name, piecesHashes);
         else
-            toReturn = CreateSingleFileTorrent(InfoDic, announce, pieceLength, name, piecesHashes);
-
-        return toReturn;
+            return CreateSingleFileTorrent(InfoDic, announce, pieceLength, name, piecesHashes);
     }
 
-    Ref<SingleFileTorrent> TorrentFileFactory::CreateSingleFileTorrent(Ref<BencodeDictionary>& InfoDic,
-                                                                         Ref<std::string>& announce,
-                                                                         Ref<int64_t>& pieceLength,
-                                                                         Ref<std::string>& name,
-                                                                         Ref<std::vector<Hash_t>>& pieceHashes)
-    {
-        const Ref<int64_t> length = TryGetIntValue(InfoDic, "length");
-
-        if (announce != nullptr &&
-            pieceLength != nullptr &&
-            name != nullptr &&
-            pieceHashes != nullptr &&
-            length != nullptr)
-            return std::move(CreateRef<SingleFileTorrent>(
-                std::move(*announce),
-                *pieceLength,
-                std::move(pieceHashes),
-                std::move(*name),
-                *length));
-
-        NTC_ERROR("Cannot create a torrent file representation 'cause one of the required fields is not filled in");
-
-        return std::move(Ref<SingleFileTorrent>());
-    }
 
     Ref<MultipleFileTorrent> TorrentFileFactory::CreateMultipleFileTorrent(Ref<BencodeDictionary>& InfoDic,
                                                                              Ref<std::string>& announce,
@@ -108,16 +80,42 @@ namespace NTC
             pieceHashes != nullptr &&
             !files.empty()
         )
-            return std::move(CreateRef<MultipleFileTorrent>(
+            return CreateRef<MultipleFileTorrent>(
                 std::move(*announce),
                 *pieceLength,
                 std::move(pieceHashes),
                 std::move(*name),
                 std::move(files)
-            ));
+            );
 
         NTC_ERROR("Cannot create a torrent file representation 'cause one of the required fields is not filled in");
-        return std::move(Ref<MultipleFileTorrent>());
+        
+        return {};
+    }
+
+    Ref<SingleFileTorrent> TorrentFileFactory::CreateSingleFileTorrent(Ref<BencodeDictionary>& InfoDic,
+                                                                         Ref<std::string>& announce,
+                                                                         Ref<int64_t>& pieceLength,
+                                                                         Ref<std::string>& name,
+                                                                         Ref<std::vector<Hash_t>>& pieceHashes)
+    {
+        const Ref<int64_t> length = TryGetIntValue(InfoDic, "length");
+
+        if (announce != nullptr &&
+            pieceLength != nullptr &&
+            name != nullptr &&
+            pieceHashes != nullptr &&
+            length != nullptr)
+            return CreateRef<SingleFileTorrent>(
+                std::move(*announce),
+                *pieceLength,
+                std::move(pieceHashes),
+                std::move(*name),
+                *length);
+
+        NTC_ERROR("Cannot create a torrent file representation 'cause one of the required fields is not filled in");
+
+        return {};
     }
 
     Ref<std::vector<Hash_t>> TorrentFileFactory::SeparatePiecesStr(Ref<std::string>& pieces)

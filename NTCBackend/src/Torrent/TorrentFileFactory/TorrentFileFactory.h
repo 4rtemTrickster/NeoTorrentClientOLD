@@ -19,18 +19,19 @@ namespace NTC
 
     private:
         [[nodiscard]]
+        static Ref<MultipleFileTorrent> CreateMultipleFileTorrent(Ref<BencodeDictionary>& InfoDic,
+                                                                  Ref<std::string>& announce,
+                                                                  Ref<int64_t>& pieceLength,
+                                                                  Ref<std::string>& name,
+                                                                  Ref<std::vector<Hash_t>>& pieceHashes);
+
+        [[nodiscard]]
         static Ref<SingleFileTorrent> CreateSingleFileTorrent(Ref<BencodeDictionary>& InfoDic,
                                                               Ref<std::string>& announce,
                                                               Ref<int64_t>& pieceLength,
                                                               Ref<std::string>& name,
                                                               Ref<std::vector<Hash_t>>& pieceHashes);
-
-        [[nodiscard]]
-        static Ref<MultipleFileTorrent> CreateMultipleFileTorrent(Ref<BencodeDictionary>& InfoDic,
-                                                                Ref<std::string>& announce,
-                                                                Ref<int64_t>& pieceLength,
-                                                                Ref<std::string>& name,
-                                                                Ref<std::vector<Hash_t>>& pieceHashes);
+        
 
         static Ref<std::vector<Hash_t>> SeparatePiecesStr(Ref<std::string>& pieces);
 
