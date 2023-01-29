@@ -10,6 +10,7 @@ namespace NTC
 {
     Ref<IBencodeElement> BencodeDecoder::Decode(const std::string& encoded)
     {
+        NTC_PROFILE_FUNCTION();
         std::string::size_type index = 0;
         return Decode(encoded, index);
     }

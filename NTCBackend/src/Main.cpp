@@ -9,16 +9,25 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 {
     try
     {
+        NTC_PROFILE_BEGIN_SESSION("Launch", "../Profiling/Startup.json");
+        
         NTC::Logger::Init();
         NTC::FrontendProcessLauncher::Launch();
 
         if (NTC::LaunchStatus status = NTC::FrontendProcessLauncher::GetStatus())
             return status;
 
+        NTC_PROFILE_END_SESSION();
+        
+
+        NTC_PROFILE_BEGIN_SESSION("Work", "../Profiling/Working.json");
+
         auto IPCC = std::async(std::launch::async, &NTC::IPCController::Run);
         NTC::IPCMessageDispatcher::Run();
 
         IPCC.wait();
+
+        NTC_PROFILE_END_SESSION();
     }
     catch (std::exception& e)
     {

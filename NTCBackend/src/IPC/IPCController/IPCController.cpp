@@ -19,6 +19,7 @@ namespace NTC
 
     void IPCController::RunImp()
     {
+        NTC_PROFILE_FUNCTION();
         while (true)
         {
             zmq::message_t request;

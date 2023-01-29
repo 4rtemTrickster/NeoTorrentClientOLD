@@ -10,6 +10,7 @@ namespace NTC
 
     void Logger::Init()
     {
+        NTC_PROFILE_FUNCTION();
         Ref<spdlog::sinks::basic_file_sink_mt> FileSink = CreateRef<spdlog::sinks::basic_file_sink_mt>("..\\NG.log", true);
         FileSink->set_pattern("%^[%T] [%n] [%l]: %v%$");
 

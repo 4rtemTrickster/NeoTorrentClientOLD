@@ -5,6 +5,7 @@ namespace NTC
 {
     void FrontendProcessLauncher::Launch()
     {
+        NTC_PROFILE_FUNCTION();
         if (!FrontendProcessInstance)
         {
             NTC_TRACE("Frontend starting up");

@@ -15,6 +15,7 @@ namespace NTC
 
     void IPCMessageDispatcher::RunImp()
     {
+        NTC_PROFILE_FUNCTION();
         std::string Message;
         while (true)
         {
@@ -37,6 +38,7 @@ namespace NTC
 
     void IPCMessageDispatcher::MessageProc(const std::string& message)
     {
+        NTC_PROFILE_FUNCTION();
         std::string_view Prefix(message.c_str(), message.find_first_of(' '));
 
         if (Prefix.starts_with("LOG:")) LogMessageProc(Prefix, message);
@@ -48,8 +50,6 @@ namespace NTC
             Ref<BencodeDictionary> dic = std::dynamic_pointer_cast<BencodeDictionary>(BencodeDecoder::Decode(*readed));
 
             auto f = TorrentFileFactory::CreateTorrentFile(dic);
-
-            f;
         }
     }
 

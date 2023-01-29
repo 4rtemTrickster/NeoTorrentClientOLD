@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include <string>
+#include <fstream>
 #include <queue>
 #include <list>
 #include <unordered_map>
@@ -15,9 +16,14 @@
 #include <future>
 #include <chrono>
 
+#include <algorithm>
+
+#include <filesystem>
+
 #include <zmq.hpp>
 
 #include <boost/optional/optional.hpp>
+
 
 namespace NTC
 {
@@ -56,3 +62,4 @@ namespace NTC
 //#define IPC_LOGGING
 
 #include "Logger/Logger.h"
+#include "Debug/Instrumentor.h"

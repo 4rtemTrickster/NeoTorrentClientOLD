@@ -42,12 +42,20 @@ project "NTCBackend"
     }
 
     filter "configurations:Debug"
-    defines "NTC_DEBUG"
+    defines 
+    {
+        "NTC_DEBUG",
+        "NTC_PROFILE"
+    }
     runtime "Debug"
     symbols "on"
 
 filter "configurations:Release"
-    defines "NTC_RELEASE"
+    defines 
+    {
+        "NTC_RELEASE",
+        "NTC_PROFILE"
+    }
     runtime "Release"
     optimize "on"
 
