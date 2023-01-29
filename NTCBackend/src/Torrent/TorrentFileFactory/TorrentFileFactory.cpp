@@ -14,6 +14,8 @@ namespace NTC
 
     Ref<ITorrentFile> TorrentFileFactory::CreateTorrentFile(Ref<BencodeDictionary>& dictionary)
     {
+        NTC_PROFILE_FUNCTION();
+        
         Ref<BencodeDictionary> InfoDic = TryGetDictionaryValue(dictionary, "info");
 
         if (!InfoDic)
@@ -43,6 +45,7 @@ namespace NTC
                                                                              Ref<std::string>& name,
                                                                              Ref<std::vector<Hash_t>>& pieceHashes)
     {
+        NTC_PROFILE_FUNCTION();
         Ref<BencodeList> FilesList = TryGetListValue(InfoDic, "files");
 
         std::list<MultipleFileTorrent::file> files;
@@ -99,6 +102,7 @@ namespace NTC
                                                                          Ref<std::string>& name,
                                                                          Ref<std::vector<Hash_t>>& pieceHashes)
     {
+        NTC_PROFILE_FUNCTION();
         const Ref<int64_t> length = TryGetIntValue(InfoDic, "length");
 
         if (announce != nullptr &&
@@ -120,6 +124,9 @@ namespace NTC
 
     Ref<std::vector<Hash_t>> TorrentFileFactory::SeparatePiecesStr(Ref<std::string>& pieces)
     {
+        NTC_PROFILE_FUNCTION();
+
+        //TODO: YOU NEED to optimize this shit!;
         Ref<std::vector<Hash_t>> pieceHashes = CreateRef<std::vector<Hash_t>>();
 
         pieceHashes->reserve(pieces->size() / 20);
