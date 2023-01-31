@@ -1,8 +1,6 @@
 ﻿#include "NTCpch.h"
 #include "SingleFileTorrent.h"
 
-#include <utility>
-
 namespace NTC
 {
     SingleFileTorrent::SingleFileTorrent(const std::string& announce, int64_t pieceLength,

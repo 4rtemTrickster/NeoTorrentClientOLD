@@ -12,6 +12,8 @@ namespace NTC
 {
     Ref<IBencodeVisitor> TorrentFileFactory::visitor_ = CreateRef<BencodeVisitor>();
 
+    static std::future<void> stringSeparationResult;
+
     Ref<ITorrentFile> TorrentFileFactory::CreateTorrentFile(Ref<BencodeDictionary>& dictionary)
     {
         NTC_PROFILE_FUNCTION();
@@ -23,13 +25,14 @@ namespace NTC
             NTC_ERROR("Can not find info dictionary while parsing");
             return {};
         }
-
+        
         Ref<std::string> announce = TryGetStringValue(dictionary, "announce");
         Ref<int64_t> pieceLength = TryGetIntValue(InfoDic, "piece length");
         Ref<std::string> pieces = TryGetStringValue(InfoDic, "pieces");
         Ref<std::string> name = TryGetStringValue(InfoDic, "name");
         Ref<std::vector<Hash_t>> piecesHashes;
-        if (pieces != nullptr) piecesHashes = SeparatePiecesStr(pieces);
+        if (pieces != nullptr)
+            stringSeparationResult = std::async(std::launch::async, [&](){piecesHashes = SeparatePiecesStr(pieces); });
         
 
         if (InfoDic->contains("files"))
@@ -51,6 +54,7 @@ namespace NTC
         std::list<MultipleFileTorrent::file> files;
         for (auto& element : *FilesList)
         {
+            NTC_PROFILE_SCOPE("FilesList");
             Ref<BencodeDictionary> dic = TryGetDictionaryValue(element);
             Ref<int64_t> length = TryGetIntValue(dic, "length");
 
@@ -59,6 +63,7 @@ namespace NTC
 
             for (auto& pathPart : *pathList)
             {
+                NTC_PROFILE_SCOPE("paths");
                 Ref<std::string> pp = TryGetStringValue(pathPart);
 
                 if (pp != nullptr)
@@ -76,6 +81,8 @@ namespace NTC
                 return nullptr;
             }
         }
+
+        stringSeparationResult.wait();
 
         if (announce != nullptr &&
             pieceLength != nullptr &&
@@ -105,6 +112,8 @@ namespace NTC
         NTC_PROFILE_FUNCTION();
         const Ref<int64_t> length = TryGetIntValue(InfoDic, "length");
 
+        stringSeparationResult.wait();
+
         if (announce != nullptr &&
             pieceLength != nullptr &&
             name != nullptr &&
@@ -126,20 +135,10 @@ namespace NTC
     {
         NTC_PROFILE_FUNCTION();
 
-        //TODO: YOU NEED to optimize this shit!;
-        Ref<std::vector<Hash_t>> pieceHashes = CreateRef<std::vector<Hash_t>>();
+        //TODO: YOU NEED to optimize this shit! we a copying almost full .torrent file
+        Ref<std::vector<Hash_t>> pieceHashes = CreateRef<std::vector<Hash_t>>(pieces->size() / 20);
 
-        pieceHashes->reserve(pieces->size() / 20);
-
-        for (std::size_t i = 0; i < pieces->size(); i += 20)
-        {
-            Hash_t hash;
-
-            for (std::size_t j = 0; j < 20; ++j)
-                hash.at(j) = static_cast<std::byte>(pieces->at(i + j));
-
-            pieceHashes->push_back(hash);
-        }
+        std::memcpy(pieceHashes->data(), pieces->data(), pieces->size());
 
         return pieceHashes;
     }

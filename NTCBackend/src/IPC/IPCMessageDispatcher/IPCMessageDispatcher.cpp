@@ -50,6 +50,8 @@ namespace NTC
             Ref<BencodeDictionary> dic = std::dynamic_pointer_cast<BencodeDictionary>(BencodeDecoder::Decode(*readed));
 
             auto f = TorrentFileFactory::CreateTorrentFile(dic);
+
+            f;
         }
     }
 

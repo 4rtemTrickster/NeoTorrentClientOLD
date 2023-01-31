@@ -35,6 +35,8 @@ namespace NTC
         InstrumentationSession* m_CurrentSession;
         std::ofstream m_OutputStream;
         int m_ProfileCount;
+        std::mutex m_lock;
+        
     public:
         Instrumentor()
             : m_CurrentSession(nullptr), m_ProfileCount(0)
@@ -65,6 +67,8 @@ namespace NTC
 
         void WriteProfile(const ProfileResult& result)
         {
+            std::lock_guard<std::mutex> lock(m_lock);
+            
             if (m_ProfileCount++ > 0)
                 m_OutputStream << ",";
 
