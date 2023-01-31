@@ -35,6 +35,7 @@ namespace NTC
         InstrumentationSession* m_CurrentSession;
         std::ofstream m_OutputStream;
         int m_ProfileCount;
+        // My addition to the original cherno code. Just to be thread safe
         std::mutex m_lock;
         
     public:
@@ -46,6 +47,8 @@ namespace NTC
         void BeginSession(const std::string& name, const std::filesystem::path& filepath = "results.json")
         {
             m_OutputStream.open(filepath);
+            
+            // My addition to the original cherno code. Just to create outer directory for profiling files 
             if(!m_OutputStream.is_open())
             {
                 auto p = filepath;
@@ -67,6 +70,7 @@ namespace NTC
 
         void WriteProfile(const ProfileResult& result)
         {
+            // My addition to the original cherno code. Just to be thread safe
             std::lock_guard<std::mutex> lock(m_lock);
             
             if (m_ProfileCount++ > 0)
