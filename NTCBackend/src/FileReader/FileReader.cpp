@@ -10,6 +10,7 @@ namespace NTC
     Ref<std::string> FileReader::ReadFile(const std::filesystem::path& path)
     {
         NTC_PROFILE_FUNCTION();
+        NTC_TRACE("Reading new file");
         Ref<std::string> ret = CreateRef<std::string>();
 
         fs_.open(path, std::ios_base::in | std::ios_base::binary);

@@ -11,10 +11,12 @@ namespace NTC
 
         struct file
         {
+        private:
             int64_t Length_;
             std::string Md5Sum_;
             std::list<std::string> Path_;
 
+        public:
             file(int64_t length, std::list<std::string>& path);
             file(int64_t length, std::list<std::string>&& path);
 

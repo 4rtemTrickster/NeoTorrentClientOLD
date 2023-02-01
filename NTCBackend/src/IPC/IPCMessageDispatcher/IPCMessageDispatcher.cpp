@@ -51,7 +51,10 @@ namespace NTC
 
             auto f = TorrentFileFactory::CreateTorrentFile(dic);
 
-            f;
+            if(f != nullptr)
+                NTC_TRACE("Torrent file created!");
+            else
+                NTC_TRACE("Error during torrent file creation!");
         }
     }
 

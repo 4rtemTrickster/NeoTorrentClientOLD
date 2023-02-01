@@ -7,6 +7,7 @@
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int cmdShow)
 {
+    std::future<void> IPCC;
     try
     {
         NTC_PROFILE_BEGIN_SESSION("Launch", "../Profiling/Startup.json");
@@ -22,7 +23,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
         NTC_PROFILE_BEGIN_SESSION("Work", "../Profiling/Working.json");
 
-        auto IPCC = std::async(std::launch::async, &NTC::IPCController::Run);
+        IPCC = std::async(std::launch::async, &NTC::IPCController::Run);
         NTC::IPCMessageDispatcher::Run();
 
         IPCC.wait();
@@ -31,6 +32,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     }
     catch (std::exception& e)
     {
+        IPCC.wait();
         NTC_ERROR(e.what());
     }
 

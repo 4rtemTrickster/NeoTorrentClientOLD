@@ -13,10 +13,12 @@ namespace NTC
     Ref<IBencodeVisitor> TorrentFileFactory::visitor_ = CreateRef<BencodeVisitor>();
 
     static std::future<void> stringSeparationResult;
+    static std::future<void> traversedAnnounceListResult;
 
     Ref<ITorrentFile> TorrentFileFactory::CreateTorrentFile(Ref<BencodeDictionary>& dictionary)
     {
         NTC_PROFILE_FUNCTION();
+        NTC_TRACE("Creating new torrent file");
         
         Ref<BencodeDictionary> InfoDic = TryGetDictionaryValue(dictionary, "info");
 
@@ -25,20 +27,51 @@ namespace NTC
             NTC_ERROR("Can not find info dictionary while parsing");
             return {};
         }
-        
+
+        //Required parameters
         Ref<std::string> announce = TryGetStringValue(dictionary, "announce");
         Ref<int64_t> pieceLength = TryGetIntValue(InfoDic, "piece length");
         Ref<std::string> pieces = TryGetStringValue(InfoDic, "pieces");
         Ref<std::string> name = TryGetStringValue(InfoDic, "name");
         Ref<std::vector<Hash_t>> piecesHashes;
         if (pieces != nullptr)
-            stringSeparationResult = std::async(std::launch::async, [&](){piecesHashes = SeparatePiecesStr(pieces); });
+            stringSeparationResult = std::async(std::launch::async, [&]()
+            {
+                piecesHashes = SeparatePiecesStr(pieces);
+            });
         
-
+        Ref<ITorrentFile> NewTorrent;
         if (InfoDic->contains("files"))
-            return CreateMultipleFileTorrent(InfoDic, announce, pieceLength, name, piecesHashes);
+            NewTorrent = CreateMultipleFileTorrent(InfoDic, announce, pieceLength, name, piecesHashes);
         else
-            return CreateSingleFileTorrent(InfoDic, announce, pieceLength, name, piecesHashes);
+            NewTorrent = CreateSingleFileTorrent(InfoDic, announce, pieceLength, name, piecesHashes);
+
+        // Optional parameters
+        if(NewTorrent != nullptr)
+        {
+            Ref<BencodeList> announceListOfLists = TryGetListValue(dictionary, "announce-list");
+            if(announceListOfLists != nullptr)
+                traversedAnnounceListResult = std::async(std::launch::async, [&]()
+                {
+                    NewTorrent->SetAnnounceList(std::move(*TraverseAnnounceList(announceListOfLists)));
+                });
+
+            Ref<int64_t> creationDate = TryGetIntValue(dictionary, "creation date");
+            Ref<std::string> comment = TryGetStringValue(dictionary, "comment");
+            Ref<std::string> createdBy = TryGetStringValue(dictionary, "created by");
+            Ref<std::string> encoding = TryGetStringValue(dictionary, "encoding");
+            Ref<int64_t> privateField = TryGetIntValue(InfoDic, "private");
+
+            if(creationDate != nullptr) NewTorrent->SetCreationDate(*creationDate);
+            if(comment != nullptr) NewTorrent->SetComment(std::move(*comment));
+            if(createdBy != nullptr) NewTorrent->SetCreatedBy(std::move(*createdBy));
+            if(encoding != nullptr) NewTorrent->SetEncoding(std::move(*encoding));
+            if(privateField != nullptr) NewTorrent->SetPrivate(*privateField);
+
+            traversedAnnounceListResult.wait();
+        }
+
+        return NewTorrent;
     }
 
 
@@ -57,6 +90,8 @@ namespace NTC
             NTC_PROFILE_SCOPE("FilesList");
             Ref<BencodeDictionary> dic = TryGetDictionaryValue(element);
             Ref<int64_t> length = TryGetIntValue(dic, "length");
+
+            Ref<std::string> md5sum = TryGetStringValue(InfoDic, "md5sum");
 
             Ref<BencodeList> pathList = TryGetListValue(dic, "path");
             std::list<std::string> path;
@@ -80,10 +115,13 @@ namespace NTC
                     "Cannot create a torrent file representation 'cause one of the required fields is not filled in");
                 return nullptr;
             }
+
+            if(md5sum != nullptr)
+                files.back().SetMd5Sum(std::move(*md5sum));
         }
-
+        
         stringSeparationResult.wait();
-
+        
         if (announce != nullptr &&
             pieceLength != nullptr &&
             name != nullptr &&
@@ -97,6 +135,7 @@ namespace NTC
                 std::move(*name),
                 std::move(files)
             );
+        
 
         NTC_ERROR("Cannot create a torrent file representation 'cause one of the required fields is not filled in");
         
@@ -110,22 +149,32 @@ namespace NTC
                                                                          Ref<std::vector<Hash_t>>& pieceHashes)
     {
         NTC_PROFILE_FUNCTION();
-        const Ref<int64_t> length = TryGetIntValue(InfoDic, "length");
-
+        Ref<int64_t> length = TryGetIntValue(InfoDic, "length");
+        Ref<std::string> md5sum = TryGetStringValue(InfoDic, "md5sum");
+        
         stringSeparationResult.wait();
+
+        Ref<SingleFileTorrent> NewTorrent;
 
         if (announce != nullptr &&
             pieceLength != nullptr &&
             name != nullptr &&
             pieceHashes != nullptr &&
             length != nullptr)
-            return CreateRef<SingleFileTorrent>(
+            NewTorrent = CreateRef<SingleFileTorrent>(
                 std::move(*announce),
                 *pieceLength,
                 std::move(pieceHashes),
                 std::move(*name),
                 *length);
 
+        if(md5sum != nullptr) NewTorrent->SetMd5Sum(std::move(*md5sum));
+        
+
+        if(NewTorrent != nullptr)
+            return NewTorrent;
+
+        
         NTC_ERROR("Cannot create a torrent file representation 'cause one of the required fields is not filled in");
 
         return {};
@@ -141,6 +190,26 @@ namespace NTC
         std::memcpy(pieceHashes->data(), pieces->data(), pieces->size());
 
         return pieceHashes;
+    }
+
+    Ref<AnnounceList_t> TorrentFileFactory::TraverseAnnounceList(Ref<BencodeList>& announceListOfLists)
+    {
+        NTC_PROFILE_FUNCTION();
+        Ref<AnnounceList_t> ret = CreateRef<AnnounceList_t>();
+        for (auto& element : *announceListOfLists)
+        {
+            auto innerList = DynamicCast<BencodeList>(element);
+            if(innerList)
+            {
+                for (auto& innerElement : *innerList)
+                {
+                    auto castedElement = DynamicCast<BencodeString>(innerElement);
+                    ret->push_back(castedElement->GetValue());
+                }
+            }
+        }
+
+        return ret;
     }
 
     Ref<std::string> TorrentFileFactory::TryGetStringValue(Ref<BencodeDictionary>& dic, const std::string& key)

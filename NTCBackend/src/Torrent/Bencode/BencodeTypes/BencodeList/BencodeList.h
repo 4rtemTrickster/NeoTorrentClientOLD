@@ -9,6 +9,7 @@ namespace NTC
         using value_type = IBencodeElement;
         using iterator = BList::iterator;
         using const_iterator = BList::const_iterator;
+        using size_type = BList::size_type;
         
         BencodeList() = default;
         BencodeList(BList&& list);
@@ -26,6 +27,8 @@ namespace NTC
 
         inline iterator end() noexcept { return List_.end(); }
         inline const_iterator end() const noexcept { return List_.cend(); }
+
+        inline size_type size() const { return List_.size(); }
 
         static Ref<BencodeList> Read(const std::string& encoded, std::string::size_type& index);
 

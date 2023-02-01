@@ -34,6 +34,7 @@ namespace NTC
         
 
         static Ref<std::vector<Hash_t>> SeparatePiecesStr(Ref<std::string>& pieces);
+        static Ref<AnnounceList_t> TraverseAnnounceList(Ref<BencodeList>& announceListOfLists);
 
         static inline Ref<std::string> TryGetStringValue(Ref<BencodeDictionary>& dic, const std::string& key);
         static inline Ref<std::string> TryGetStringValue(Ref<IBencodeElement>& element);
