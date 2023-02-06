@@ -3,12 +3,12 @@
 
 namespace NTC
 {
-    std::string BencodeInt::Encode()
+    std::string BencodeInt::Encode() const
     {
         return "i" + std::to_string(value_) + "e";
     }
 
-    void BencodeInt::Accept(Ref<IBencodeVisitor>& visitor)
+    void BencodeInt::Accept(IBencodeVisitor* visitor)
     {
         visitor->VisitInt(CreateRef<BencodeInt>(*this));
     }

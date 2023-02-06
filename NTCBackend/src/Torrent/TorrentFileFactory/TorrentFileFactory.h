@@ -36,14 +36,15 @@ namespace NTC
         static Ref<std::vector<Hash_t>> SeparatePiecesStr(Ref<std::string>& pieces);
         static Ref<AnnounceList_t> TraverseAnnounceList(Ref<BencodeList>& announceListOfLists);
 
-        static inline Ref<std::string> TryGetStringValue(Ref<BencodeDictionary>& dic, const std::string& key);
-        static inline Ref<std::string> TryGetStringValue(Ref<IBencodeElement>& element);
-        static inline Ref<int64_t> TryGetIntValue(Ref<BencodeDictionary>& dic, const std::string& key);
-        static inline Ref<int64_t> TryGetIntValue(Ref<IBencodeElement>& element);
-        static inline Ref<BencodeList> TryGetListValue(Ref<BencodeDictionary>& dic, const std::string& key);
-        static inline Ref<BencodeDictionary> TryGetDictionaryValue(Ref<BencodeDictionary>& dic, const std::string& key);
-        static inline Ref<BencodeDictionary> TryGetDictionaryValue(Ref<IBencodeElement>& element);
+        static inline Ref<std::string> TryGetStringValue(Ref<BencodeDictionary>& dic, const std::string& key, IBencodeVisitor& visitor);
+        static inline Ref<std::string> TryGetStringValue(Ref<IBencodeElement>& element, IBencodeVisitor& visitor);
+        static inline Ref<int64_t> TryGetIntValue(Ref<BencodeDictionary>& dic, const std::string& key, IBencodeVisitor& visitor);
+        static inline Ref<int64_t> TryGetIntValue(Ref<IBencodeElement>& element, IBencodeVisitor& visitor);
+        static inline Ref<BencodeList> TryGetListValue(Ref<BencodeDictionary>& dic, const std::string& key, IBencodeVisitor& visitor);
+        static inline Ref<BencodeDictionary> TryGetDictionaryValue(Ref<BencodeDictionary>& dic, const std::string& key, IBencodeVisitor& visitor);
+        static inline Ref<BencodeDictionary> TryGetDictionaryValue(Ref<IBencodeElement>& element, IBencodeVisitor& visitor);
 
-        static Ref<IBencodeVisitor> visitor_;
+        static std::future<void> stringSeparationResult;
+        static std::future<void> HasingResult;
     };
 }

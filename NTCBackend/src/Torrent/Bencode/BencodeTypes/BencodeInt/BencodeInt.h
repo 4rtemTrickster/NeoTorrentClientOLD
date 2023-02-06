@@ -15,9 +15,9 @@ namespace NTC
         inline const int64_t& GetValue() const { return value_; }
         inline int64_t& GetValue() { return value_; }
 
-        virtual std::string Encode() override;
+        virtual std::string Encode() const override;
 
-        virtual void Accept(Ref<IBencodeVisitor>& visitor) override;
+        virtual void Accept(IBencodeVisitor* visitor) override;
 
         static Ref<BencodeInt> Read(const std::string& encoded, std::string::size_type& index);
 

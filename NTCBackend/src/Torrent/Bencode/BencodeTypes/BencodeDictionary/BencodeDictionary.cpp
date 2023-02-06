@@ -23,20 +23,20 @@ namespace NTC
         return {};
     }
 
-    std::string BencodeDictionary::Encode()
+    std::string BencodeDictionary::Encode() const
     {
         std::string ret;
         
         ret.append("d");
         for (auto& [key, value] : Map_)
-            ret.append(key.GetValue() + value->Encode());
+            ret.append(key.Encode() + value->Encode());
 
         ret.append("e");
 
         return ret;
     }
 
-    void BencodeDictionary::Accept(Ref<IBencodeVisitor>& visitor)
+    void BencodeDictionary::Accept(IBencodeVisitor* visitor)
     {
         visitor->VistDictionary(CreateRef<BencodeDictionary>(*this));
     }

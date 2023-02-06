@@ -11,7 +11,9 @@ namespace NTC
 
 
 #pragma region Setters
-    void ITorrentFile::SetInfoHash(Hash_t& infoHash) { InfoHash_ = infoHash; }
+    void ITorrentFile::SetInfoHash(const std::string& infoHash) { InfoHash_ = infoHash; }
+
+    void ITorrentFile::SetInfoHash(std::string&& infoHash) { InfoHash_ = std::move(infoHash); }
 
     void ITorrentFile::SetAnnounceList(const AnnounceList_t& announceList) { AnnounceList_ = announceList; }
 

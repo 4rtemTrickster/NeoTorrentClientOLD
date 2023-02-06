@@ -3,12 +3,12 @@
 
 namespace NTC
 {
-    std::string BencodeString::Encode()
+    std::string BencodeString::Encode() const
     {
         return std::to_string(value_.length()) + ":" + value_;
     }
 
-    void BencodeString::Accept(Ref<IBencodeVisitor>& visitor)
+    void BencodeString::Accept(IBencodeVisitor* visitor)
     {
         visitor->VisitString(CreateRef<BencodeString>(*this));
     }
@@ -86,17 +86,5 @@ namespace NTC
     bool operator!=(const BencodeString& lhs, const std::string& rhs)
     {
         return !(lhs == rhs);
-    }
-
-    std::size_t BencodeString::operator()(const BencodeString& k) const
-    {
-        return hash_value(k);
-    }
-
-    std::size_t hash_value(const BencodeString& obj)
-    {
-        std::size_t seed = 0x491D352D;
-        boost::hash_combine(seed, obj.value_);
-        return seed;
     }
 }

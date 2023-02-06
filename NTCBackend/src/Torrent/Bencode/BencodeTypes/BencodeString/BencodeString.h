@@ -20,9 +20,9 @@ namespace NTC
         inline const std::string& GetValue() const { return value_; }
         inline std::string& GetValue() { return value_; }
         
-        virtual std::string Encode() override;
+        virtual std::string Encode() const override;
 
-        virtual void Accept(Ref<IBencodeVisitor>& visitor) override;
+        virtual void Accept(IBencodeVisitor* visitor) override;
 
         static Ref<BencodeString> Read(const std::string& encoded, std::string::size_type& index);
 
@@ -40,9 +40,7 @@ namespace NTC
         friend bool operator>(const BencodeString& lhs, const std::string& rhs);
         friend bool operator>=(const BencodeString& lhs, const std::string& rhs);
 
-        std::size_t operator()(const BencodeString& k) const;
-
-        friend std::size_t hash_value(const BencodeString& obj);
+        bool operator()(const BencodeString& lhs, const BencodeString& rhs) const { return lhs.value_ < rhs.value_; }
 
     protected:
         std::string value_;

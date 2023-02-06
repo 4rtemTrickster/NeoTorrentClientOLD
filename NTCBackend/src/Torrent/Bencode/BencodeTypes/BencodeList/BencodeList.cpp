@@ -8,7 +8,7 @@ namespace NTC
     BencodeList::BencodeList(BList&& list)
         : List_(std::move(list)) {}
 
-    std::string BencodeList::Encode()
+    std::string BencodeList::Encode() const
     {
         std::string ret;
 
@@ -22,7 +22,7 @@ namespace NTC
         return ret;
     }
 
-    void BencodeList::Accept(Ref<IBencodeVisitor>& visitor)
+    void BencodeList::Accept(IBencodeVisitor* visitor)
     {
         visitor->VistitList(CreateRef<BencodeList>(*this));
     }

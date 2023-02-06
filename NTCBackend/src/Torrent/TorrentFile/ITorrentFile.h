@@ -3,7 +3,8 @@
 namespace NTC
 {
     using AnnounceList_t = std::list<std::string>;
-    using Hash_t = std::array<std::byte, 20>;
+    constexpr std::size_t HasSize = 20;
+    using Hash_t = std::array<std::byte, HasSize>;
 
     class ITorrentFile
     {
@@ -21,7 +22,7 @@ namespace NTC
         const std::string& GetAnnounce() const { return Announce_; }
 
         [[nodiscard]]
-        const Hash_t& GetInfoHash() const { return InfoHash_; }
+        const std::string& GetInfoHash() const { return InfoHash_; }
 
         [[nodiscard]]
         const AnnounceList_t& GetAnnounceList() const { return AnnounceList_; }
@@ -49,8 +50,9 @@ namespace NTC
         #pragma endregion Getters
 
         #pragma region Setters
-        void SetInfoHash(Hash_t& infoHash);
-
+        void SetInfoHash(const std::string& infoHash);
+        void SetInfoHash(std::string&& infoHash);
+        
         void SetAnnounceList(const AnnounceList_t& announceList);
         void SetAnnounceList(AnnounceList_t&& announceList);
 
@@ -74,7 +76,7 @@ namespace NTC
         virtual ~ITorrentFile() = default;
 
         std::string Announce_;
-        Hash_t InfoHash_ = {};
+        std::string InfoHash_;
         AnnounceList_t AnnounceList_;
         int64_t CreationDate_ = 0;
         std::string Comment_;

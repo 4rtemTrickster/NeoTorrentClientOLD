@@ -9,6 +9,7 @@
 #include <queue>
 #include <list>
 #include <unordered_map>
+#include <map>
 
 #include <thread>
 #include <mutex>
@@ -17,6 +18,7 @@
 #include <chrono>
 
 #include <algorithm>
+#include <ranges>
 #include <utility>
 
 #include <filesystem>
@@ -24,7 +26,8 @@
 #include <zmq.hpp>
 
 #include <boost/optional/optional.hpp>
-
+#include <boost/compute/detail/sha1.hpp>
+#include <boost/algorithm/string.hpp>
 
 namespace NTC
 {

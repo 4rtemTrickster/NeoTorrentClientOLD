@@ -18,9 +18,9 @@ namespace NTC
         inline const BList& GetValue() const { return List_; }
         inline BList& GetValue() { return List_; }
 
-        virtual std::string Encode() override;
+        virtual std::string Encode() const override;
 
-        virtual void Accept(Ref<IBencodeVisitor>& visitor) override;
+        virtual void Accept(IBencodeVisitor* visitor) override;
 
         inline iterator begin() noexcept { return List_.begin(); }
         inline const_iterator begin() const noexcept { return List_.cbegin(); }
