@@ -18,6 +18,8 @@ class mainWindow(QMainWindow):
 
     def _AddTorrent(self):
         FileName: str = QFileDialog.getOpenFileName(self, "Select file", "c:\\", "Torrent files (*.torrent)")
-
         if FileName[0] != "":
             self._IPCC.SendMessage("READ_FILE: " + FileName[0])
+            
+        for i in range(0, 100):
+            self._IPCC.SendMessage("TEST QUEUE: " + str(i))

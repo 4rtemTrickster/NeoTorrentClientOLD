@@ -7,6 +7,7 @@
 
 #include <string>
 #include <queue>
+#include <deque>
 #include <list>
 #include <unordered_map>
 #include <map>
@@ -19,6 +20,7 @@
 
 #include <algorithm>
 #include <ranges>
+#include <type_traits>
 #include <utility>
 
 #include <filesystem>
@@ -67,3 +69,4 @@ namespace NTC
 
 #include "Logger/Logger.h"
 #include "Debug/Instrumentor.h"
+#include "ThreadPool/ThreadPool.h"

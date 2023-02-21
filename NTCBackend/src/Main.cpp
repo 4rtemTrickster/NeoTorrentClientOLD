@@ -5,9 +5,10 @@
 #include "IPC/IPCMessageDispatcher/IPCMessageDispatcher.h"
 
 
+
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int cmdShow)
 {
-    std::future<void> IPCC;
+    std::future<std::invoke_result_t<void(*)()>> IPCC;
     try
     {
         NTC_PROFILE_BEGIN_SESSION("Launch", "../Profiling/Startup.json");
@@ -18,12 +19,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
         if (NTC::LaunchStatus status = NTC::FrontendProcessLauncher::GetStatus())
             return status;
 
+        NTC::ThreadPool::Init();
+
         NTC_PROFILE_END_SESSION();
         
 
         NTC_PROFILE_BEGIN_SESSION("Work", "../Profiling/Working.json");
 
-        IPCC = std::async(std::launch::async, &NTC::IPCController::Run);
+        
+        IPCC = NTC::ThreadPool::submit(&NTC::IPCController::Run);
+        
         NTC::IPCMessageDispatcher::Run();
 
         IPCC.wait();

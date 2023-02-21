@@ -12,15 +12,16 @@ namespace containers
     * front()\n
     * push_back()\n
     * pop_front()\n
+    * pop_back()\n
     * The standard containers std::deque and std::list satisfy these requirements.
     */
-    template <class T, class Container = std::list<T>>
+    template <class T, class Container = std::deque<T>>
     class ThreadSafeQueue
     {
     public:
         using value_type = typename Container::value_type;
-        using container_type  = Container;
-        
+        using container_type = Container;
+
         ThreadSafeQueue() = default;
         virtual ~ThreadSafeQueue() = default;
 
@@ -36,9 +37,15 @@ namespace containers
 
         /**
          * \brief Inserts element at the end
-         * \param data Variable to insert(via std::move!)
+         * \param data Variable to insert
          */
-        void push(T const& data);
+        void push(const T& data);
+
+        /**
+         * \brief Inserts element at the end
+         * \param data Variable to insert
+         */
+        void push(T&& data);
 
         /**
          * \return The number of elements
@@ -65,26 +72,38 @@ namespace containers
          */
         void wait_and_pop(T& value);
 
+        [[nodiscard]]
+        bool try_steal(value_type& res);
+
     protected:
-        std::queue<T, Container> std_queue_;
+        Container container_;
         std::mutex mutex_;
         std::condition_variable condition_;
     };
 
-    template <class T, class K>
-    void ThreadSafeQueue<T, K>::clear()
+    template <class T, class Container>
+    void ThreadSafeQueue<T, Container>::clear()
     {
         std::unique_lock<std::mutex> loc(mutex_);
 
-        std::queue<T, K> empty;
-        std::swap(empty, std_queue_);
+        Container empty;
+        std::swap(empty, container_);
     }
 
     template <class T, class K>
-    void ThreadSafeQueue<T, K>::push(T const& data)
+    void ThreadSafeQueue<T, K>::push(const T& data)
     {
         std::unique_lock<std::mutex> lock(mutex_);
-        std_queue_.push(data);
+        container_.push_back(data);
+        lock.unlock();
+        condition_.notify_one();
+    }
+
+    template <class T, class Container>
+    void ThreadSafeQueue<T, Container>::push(T&& data)
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+        container_.push_back(std::move(data));
         lock.unlock();
         condition_.notify_one();
     }
@@ -93,14 +112,14 @@ namespace containers
     std::size_t ThreadSafeQueue<T, K>::size()
     {
         std::unique_lock<std::mutex> lock(mutex_);
-        return std_queue_.size();
+        return container_.size();
     }
 
     template <class T, class K>
     bool ThreadSafeQueue<T, K>::is_empty()
     {
         std::unique_lock<std::mutex> lock(mutex_);
-        return std_queue_.empty();
+        return container_.empty();
     }
 
     template <class T, class K>
@@ -108,10 +127,10 @@ namespace containers
     {
         std::unique_lock<std::mutex> lock(mutex_);
 
-        if (std_queue_.empty()) return false;
+        if (container_.empty()) return false;
 
-        value = std::move(std_queue_.front());
-        std_queue_.pop();
+        value = std::move(container_.front());
+        container_.pop_front();
 
         return true;
     }
@@ -121,9 +140,22 @@ namespace containers
     {
         std::unique_lock<std::mutex> lock(mutex_);
 
-        while (std_queue_.empty()) condition_.wait(lock);
+        while (container_.empty()) condition_.wait(lock);
 
-        value = std::move(std_queue_.front());
-        std_queue_.pop();
+        value = std::move(container_.front());
+        container_.pop_front();
+    }
+
+    template <class T, class Container>
+    bool ThreadSafeQueue<T, Container>::try_steal(value_type& res)
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+
+        if (container_.empty()) return false;
+
+        res = std::move(container_.back());
+        container_.pop_back();
+
+        return true;
     }
 }

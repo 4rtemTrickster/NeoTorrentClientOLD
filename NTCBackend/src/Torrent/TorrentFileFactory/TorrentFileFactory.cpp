@@ -42,7 +42,8 @@ namespace NTC
         }
         
         std::string infoHash;
-        HasingResult = std::async(std::launch::async, [&]()
+        
+        HasingResult = ThreadPool::submit([&]()
         {
             NTC_PROFILE_SCOPE("Hash");
 
@@ -59,7 +60,7 @@ namespace NTC
         Ref<std::string> name(TryGetStringValue(InfoDic, "name", RequiredVisitor));
         Ref<std::vector<Hash_t>> piecesHashes;
         if (pieces != nullptr)
-            stringSeparationResult = std::async(std::launch::async, [&]()
+            stringSeparationResult = ThreadPool::submit([&]()
             {
                 piecesHashes = SeparatePiecesStr(pieces);
             });
