@@ -16,12 +16,12 @@ namespace NTC
     }
 
     MultipleFileTorrent::MultipleFileTorrent(const std::string& announce, int64_t pieceLength,
-        Ref<std::vector<Hash_t>> pieceHashes, const std::string& name, const std::list<file>& files)
+        Ref<std::vector<std::string>> pieceHashes, const std::string& name, const std::list<file>& files)
             : Parent(announce, pieceHashes, pieceLength),
               Name_(name), Files_(files) {}
 
     MultipleFileTorrent::MultipleFileTorrent(std::string&& announce, int64_t pieceLength,
-        Ref<std::vector<Hash_t>>&& pieceHashes, std::string&& name, std::list<file>&& files)
+        Ref<std::vector<std::string>>&& pieceHashes, std::string&& name, std::list<file>&& files)
             : Parent(std::move(announce), std::move(pieceHashes), pieceLength),
               Name_(std::move(name)), Files_(std::move(files)) {}
 }

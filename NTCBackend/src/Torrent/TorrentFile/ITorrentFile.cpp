@@ -3,10 +3,10 @@
 
 namespace NTC
 {
-    ITorrentFile::ITorrentFile(const std::string& announce, Ref<std::vector<Hash_t>> pieceHashes, int64_t pieceLength)
+    ITorrentFile::ITorrentFile(const std::string& announce, Ref<std::vector<std::string>> pieceHashes, int64_t pieceLength)
         : Announce_(announce), PieceLength_(pieceLength), PieceHashes_(pieceHashes) {}
 
-    ITorrentFile::ITorrentFile(std::string&& announce, Ref<std::vector<Hash_t>>&& pieceHashes, int64_t pieceLength)
+    ITorrentFile::ITorrentFile(std::string&& announce, Ref<std::vector<std::string>>&& pieceHashes, int64_t pieceLength)
         : Announce_(std::move(announce)), PieceLength_(pieceLength), PieceHashes_(std::move(pieceHashes)) {}
 
 

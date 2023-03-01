@@ -7,6 +7,7 @@
 #include "IPC/MessageQueue/MessageQueue.h"
 #include "Torrent/Bencode/BencodeDecoder/BencodeDecoder.h"
 #include "Torrent/Bencode/BencodeTypes/BencodeDictionary/BencodeDictionary.h"
+#include "Torrent/Downloader/Downloader.h"
 #include "Torrent/TorrentFileFactory/TorrentFileFactory.h"
 
 namespace NTC
@@ -52,7 +53,10 @@ namespace NTC
             auto f = TorrentFileFactory::CreateTorrentFile(dic);
 
             if(f != nullptr)
+            {
                 NTC_TRACE("Torrent file created!");
+                Downloader::DownloadFile(DynamicCast<SingleFileTorrent>(f));
+            }
             else
                 NTC_TRACE("Error during torrent file creation!");
         }

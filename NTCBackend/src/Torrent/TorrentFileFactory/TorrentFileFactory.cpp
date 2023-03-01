@@ -58,7 +58,7 @@ namespace NTC
         Ref<int64_t> pieceLength(TryGetIntValue(InfoDic, "piece length", RequiredVisitor));
         Ref<std::string> pieces(TryGetStringValue(InfoDic, "pieces", RequiredVisitor));
         Ref<std::string> name(TryGetStringValue(InfoDic, "name", RequiredVisitor));
-        Ref<std::vector<Hash_t>> piecesHashes;
+        Ref<std::vector<std::string>> piecesHashes;
         if (pieces != nullptr)
             stringSeparationResult = ThreadPool::submit([&]()
             {
@@ -116,7 +116,7 @@ namespace NTC
                                                                              Ref<std::string>& announce,
                                                                              Ref<int64_t>& pieceLength,
                                                                              Ref<std::string>& name,
-                                                                             Ref<std::vector<Hash_t>>& pieceHashes)
+                                                                             Ref<std::vector<std::string>>& pieceHashes)
     {
         NTC_PROFILE_FUNCTION();
         BencodeVisitor MultipleVisitor;
@@ -184,7 +184,7 @@ namespace NTC
                                                                          Ref<std::string>& announce,
                                                                          Ref<int64_t>& pieceLength,
                                                                          Ref<std::string>& name,
-                                                                         Ref<std::vector<Hash_t>>& pieceHashes)
+                                                                         Ref<std::vector<std::string>>& pieceHashes)
     {
         NTC_PROFILE_FUNCTION();
         BencodeVisitor SingleVisitor;
@@ -220,7 +220,7 @@ namespace NTC
         return {};
     }
 
-    Ref<std::vector<Hash_t>> TorrentFileFactory::SeparatePiecesStr(Ref<std::string>& pieces)
+    Ref<std::vector<std::string>> TorrentFileFactory::SeparatePiecesStr(Ref<std::string>& pieces)
     {
         NTC_PROFILE_FUNCTION();
 
@@ -231,9 +231,13 @@ namespace NTC
         }
 
         //TODO: YOU NEED to optimize this shit! we a copying almost full .torrent file
-        Ref<std::vector<Hash_t>> pieceHashes = CreateRef<std::vector<Hash_t>>(pieces->size() / HasSize);
+        Ref<std::vector<std::string>> pieceHashes = CreateRef<std::vector<std::string>>();
 
-        std::memcpy(pieceHashes->data(), pieces->data(), pieces->size());
+        const std::size_t piecesCount = pieces->size() / HasSize;
+        pieceHashes->reserve(piecesCount);
+
+        for (std::size_t i = 0; i < piecesCount; ++i)
+            pieceHashes->emplace_back(std::string_view(pieces.get()->c_str() + i * HasSize, HasSize));
 
         return pieceHashes;
     }

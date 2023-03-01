@@ -8,7 +8,7 @@ namespace NTC
     public:
         template<typename F>
         FunctionWrapper(F&& f)
-            : impl(new impl_type<F>(std::move(f))) {}
+            : impl(new impl_type<F>(std::forward<F>(f))) {}
 
         FunctionWrapper(FunctionWrapper&& other) noexcept
             : impl(std::move(other.impl)) {}

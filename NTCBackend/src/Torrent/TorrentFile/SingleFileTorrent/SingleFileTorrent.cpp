@@ -4,11 +4,11 @@
 namespace NTC
 {
     SingleFileTorrent::SingleFileTorrent(const std::string& announce, int64_t pieceLength,
-        Ref<std::vector<Hash_t>> pieceHashes, const std::string& name, int64_t length)
+        Ref<std::vector<std::string>> pieceHashes, const std::string& name, int64_t length)
             : Parent(announce, std::move(pieceHashes), pieceLength),
               Name_(name), Length_(length) {}
 
-    SingleFileTorrent::SingleFileTorrent(std::string&& announce, int64_t pieceLength, Ref<std::vector<Hash_t>>&& pieceHashes,
+    SingleFileTorrent::SingleFileTorrent(std::string&& announce, int64_t pieceLength, Ref<std::vector<std::string>>&& pieceHashes,
         std::string&& name, int64_t length)
             : Parent(std::move(announce), std::move(pieceHashes), pieceLength),
               Name_(std::move(name)), Length_(length) {}

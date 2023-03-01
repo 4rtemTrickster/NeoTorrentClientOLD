@@ -23,17 +23,17 @@ namespace NTC
                                                                   Ref<std::string>& announce,
                                                                   Ref<int64_t>& pieceLength,
                                                                   Ref<std::string>& name,
-                                                                  Ref<std::vector<Hash_t>>& pieceHashes);
+                                                                  Ref<std::vector<std::string>>& pieceHashes);
 
         [[nodiscard]]
         static Ref<SingleFileTorrent> CreateSingleFileTorrent(Ref<BencodeDictionary>& InfoDic,
                                                               Ref<std::string>& announce,
                                                               Ref<int64_t>& pieceLength,
                                                               Ref<std::string>& name,
-                                                              Ref<std::vector<Hash_t>>& pieceHashes);
+                                                              Ref<std::vector<std::string>>& pieceHashes);
         
 
-        static Ref<std::vector<Hash_t>> SeparatePiecesStr(Ref<std::string>& pieces);
+        static Ref<std::vector<std::string>> SeparatePiecesStr(Ref<std::string>& pieces);
         static Ref<AnnounceList_t> TraverseAnnounceList(Ref<BencodeList>& announceListOfLists);
 
         static inline Ref<std::string> TryGetStringValue(Ref<BencodeDictionary>& dic, const std::string& key, IBencodeVisitor& visitor);

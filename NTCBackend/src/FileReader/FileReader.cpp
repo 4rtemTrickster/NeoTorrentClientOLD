@@ -1,8 +1,6 @@
 ﻿#include "NTCpch.h"
 #include "FileReader.h"
 
-#include <filesystem>
-
 namespace NTC
 {
     std::fstream FileReader::fs_;

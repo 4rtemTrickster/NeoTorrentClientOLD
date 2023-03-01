@@ -11,14 +11,14 @@ namespace NTC
         SingleFileTorrent(
             const std::string& announce,
             int64_t pieceLength,
-            Ref<std::vector<Hash_t>> pieceHashes,
+            Ref<std::vector<std::string>> pieceHashes,
             const std::string& name,
             int64_t length);
 
         SingleFileTorrent(
             std::string&& announce,
             int64_t pieceLength,
-            Ref<std::vector<Hash_t>>&& pieceHashes,
+            Ref<std::vector<std::string>>&& pieceHashes,
             std::string&& name,
             int64_t length);
 

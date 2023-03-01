@@ -46,7 +46,7 @@ namespace NTC
         const int64_t& GetPrivate() const { return Private_; }
 
         [[nodiscard]]
-        Ref<std::vector<Hash_t>> GetPieceHashes() { return PieceHashes_; }
+        Ref<std::vector<std::string>> GetPieceHashes() { return PieceHashes_; }
         #pragma endregion Getters
 
         #pragma region Setters
@@ -71,8 +71,8 @@ namespace NTC
         #pragma endregion Setters
 
     protected:
-        ITorrentFile(const std::string& announce, Ref<std::vector<Hash_t>> pieceHashes, int64_t pieceLength);
-        ITorrentFile(std::string&& announce, Ref<std::vector<Hash_t>>&& pieceHashes, int64_t pieceLength);
+        ITorrentFile(const std::string& announce, Ref<std::vector<std::string>> pieceHashes, int64_t pieceLength);
+        ITorrentFile(std::string&& announce, Ref<std::vector<std::string>>&& pieceHashes, int64_t pieceLength);
         virtual ~ITorrentFile() = default;
 
         std::string Announce_;
@@ -85,6 +85,6 @@ namespace NTC
 
         int64_t PieceLength_;
         int64_t Private_;
-        Ref<std::vector<Hash_t>> PieceHashes_;
+        Ref<std::vector<std::string>> PieceHashes_;
     };
 }
