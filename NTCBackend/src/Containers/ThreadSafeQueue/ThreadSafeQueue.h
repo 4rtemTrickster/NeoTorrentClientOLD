@@ -75,6 +75,9 @@ namespace containers
         [[nodiscard]]
         bool try_steal(value_type& res);
 
+        [[nodiscard]]
+        const T& front();
+
     protected:
         Container container_;
         std::mutex mutex_;
@@ -157,5 +160,12 @@ namespace containers
         container_.pop_back();
 
         return true;
+    }
+
+    template <class T, class Container>
+    const T& ThreadSafeQueue<T, Container>::front()
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+        return container_.front();
     }
 }

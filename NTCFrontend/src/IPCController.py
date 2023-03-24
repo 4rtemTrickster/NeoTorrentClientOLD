@@ -19,6 +19,7 @@ class IPCController:
         self._context = zmq.Context()
         self._socket = self._context.socket(zmq.REQ)
         self._socket.connect("ipc://NTC")
+        self._socket.set()
 
         self._MessageQueue = queue.Queue()
 

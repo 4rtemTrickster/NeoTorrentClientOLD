@@ -1,8 +1,6 @@
 ﻿#include "NTCpch.h"
 #include "IPCMessageDispatcher.h"
 
-#include <filesystem>
-
 #include "FileReader/FileReader.h"
 #include "IPC/MessageQueue/MessageQueue.h"
 #include "Torrent/Bencode/BencodeDecoder/BencodeDecoder.h"
@@ -55,7 +53,7 @@ namespace NTC
             if(f != nullptr)
             {
                 NTC_TRACE("Torrent file created!");
-                Downloader::DownloadFile(DynamicCast<SingleFileTorrent>(f));
+                Downloader::DownloadFile(f);
             }
             else
                 NTC_TRACE("Error during torrent file creation!");

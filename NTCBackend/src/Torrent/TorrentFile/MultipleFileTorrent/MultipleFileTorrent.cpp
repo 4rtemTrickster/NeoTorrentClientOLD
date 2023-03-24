@@ -24,4 +24,13 @@ namespace NTC
         Ref<std::vector<std::string>>&& pieceHashes, std::string&& name, std::list<file>&& files)
             : Parent(std::move(announce), std::move(pieceHashes), pieceLength),
               Name_(std::move(name)), Files_(std::move(files)) {}
+
+    int64_t MultipleFileTorrent::GetLength()
+    {
+        int64_t ret = 0;
+        for (auto& file : Files_)
+            ret += file.GetLength();
+
+        return ret;
+    }
 }

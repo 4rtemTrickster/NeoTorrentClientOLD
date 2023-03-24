@@ -31,6 +31,12 @@ namespace NTC
             [[nodiscard]]
             inline std::string& GetMd5Sum() { return Md5Sum_; }
 
+            [[nodiscard]]
+            inline int64_t GetLength() const { return Length_; }
+
+            [[nodiscard]]
+            inline int64_t GetLength() { return Length_; }
+
             inline void SetMd5Sum(const std::string& md5sum) { Md5Sum_ = md5sum; }
             inline void SetMd5Sum(std::string&& md5sum) { Md5Sum_ = std::move(md5sum); }
         };
@@ -51,6 +57,9 @@ namespace NTC
 
         [[nodiscard]]
         virtual const std::string& GetName() const override { return Name_; }
+
+        [[nodiscard]]
+        virtual int64_t GetLength() override;
     
     protected:
         

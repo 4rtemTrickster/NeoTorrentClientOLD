@@ -26,7 +26,7 @@ namespace NTC
         virtual const std::string& GetName() const override { return Name_; }
         
         [[nodiscard]]
-        const int64_t& GetLength() const { return Length_; }
+        int64_t GetLength() override { return Length_; }
 
         [[nodiscard]]
         const std::string& GetMd5Sum() const { return Md5Sum; }

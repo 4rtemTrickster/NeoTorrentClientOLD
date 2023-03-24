@@ -47,6 +47,14 @@ namespace NTC
 
         [[nodiscard]]
         Ref<std::vector<std::string>> GetPieceHashes() { return PieceHashes_; }
+
+        
+        /**
+         * \return The number of bytes needed to download to be 100% complete and get all the included files in the torrent.
+         */
+        [[nodiscard]]
+        virtual int64_t GetLength() = 0;
+
         #pragma endregion Getters
 
         #pragma region Setters

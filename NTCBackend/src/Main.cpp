@@ -1,9 +1,9 @@
 ﻿#include "NTCpch.h"
 
+#include "AppSettings/AppSettings.h"
 #include "FrontendProcess/FrontendProcessLauncher/FrontendProcessLauncher.h"
 #include "IPC/IPCController/IPCController.h"
 #include "IPC/IPCMessageDispatcher/IPCMessageDispatcher.h"
-
 
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int cmdShow)
@@ -12,7 +12,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     try
     {
         NTC_PROFILE_BEGIN_SESSION("Launch", "../Profiling/Startup.json");
-        
+
         NTC::Logger::Init();
         NTC::FrontendProcessLauncher::Launch();
 
@@ -21,14 +21,23 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
         NTC::ThreadPool::Init();
 
-        NTC_PROFILE_END_SESSION();
+        //TODO: Change to settings file
+        NTC::AppSettings::ClientId = "-NT0001-";
         
+        std::random_device rd; // Will be used to obtain a seed for the random number engine
+        std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+        std::uniform_int_distribution distrib(1, 9);
+        for (int i = 0; i < 12; i++)
+            NTC::AppSettings::ClientId += std::to_string(distrib(gen));
+
+        NTC_PROFILE_END_SESSION();
+
 
         NTC_PROFILE_BEGIN_SESSION("Work", "../Profiling/Working.json");
 
-        
+
         IPCC = NTC::ThreadPool::submit(&NTC::IPCController::Run);
-        
+
         NTC::IPCMessageDispatcher::Run();
 
         IPCC.wait();

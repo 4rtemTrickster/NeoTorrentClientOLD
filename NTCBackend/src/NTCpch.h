@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#define NOMINMAX
+#include <WinSock2.h>
 #include <Windows.h>
 
 #include <iostream>
@@ -17,11 +19,13 @@
 
 #include <future>
 #include <chrono>
+#include <random>
 
 #include <algorithm>
 #include <ranges>
 #include <type_traits>
 #include <utility>
+#include <bitset>
 
 #include <filesystem>
 
@@ -30,6 +34,12 @@
 #include <boost/optional/optional.hpp>
 #include <boost/compute/detail/sha1.hpp>
 #include <boost/algorithm/string.hpp>
+
+#include <boost/asio.hpp>
+#include <boost/asio/ts/buffer.hpp>
+#include <boost/asio/ts/internet.hpp>
+
+
 
 namespace NTC
 {
@@ -60,8 +70,10 @@ namespace NTC
     {
         return std::dynamic_pointer_cast<T>(std::forward<Args>(args)...);
     }
-
+    
     using LaunchStatus = DWORD;
+
+    //static constexpr std::string downloadPath = "D:/Downloads/Torrents";
 }
 
 // Turning on/off logging of recived messages 
@@ -70,3 +82,4 @@ namespace NTC
 #include "Logger/Logger.h"
 #include "Debug/Instrumentor.h"
 #include "ThreadPool/ThreadPool.h"
+#include "utility/utility.h"
