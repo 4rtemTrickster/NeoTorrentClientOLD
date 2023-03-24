@@ -27,7 +27,7 @@ namespace NTC
                                               {"uploaded", "0"},
                                               {"downloaded", std::to_string(bytesDownloaded)},
                                               {"left", std::to_string(file->GetLength())},
-                                              {"port", "8080"},
+                                              {"port", std::to_string(AppSettings::Port)},
                                               {"compact", "0"}
                                           });
 

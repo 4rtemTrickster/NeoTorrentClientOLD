@@ -1,6 +1,7 @@
 ﻿#include "NTCpch.h"
 #include "IPCMessageDispatcher.h"
 
+#include "AppSettings/AppSettings.h"
 #include "FileReader/FileReader.h"
 #include "IPC/MessageQueue/MessageQueue.h"
 #include "Torrent/Bencode/BencodeDecoder/BencodeDecoder.h"
@@ -16,13 +17,12 @@ namespace NTC
     {
         NTC_PROFILE_FUNCTION();
         std::string Message;
-        while (true)
+        while (AppSettings::bIsWorking)
         {
             try
             {
                 MessageQueue::PopMessage(Message);
                 LOG_MESSAGE("Poped message: " + Message);
-                if (Message == "App closes") break;
 
                 MessageProc(Message);
             }

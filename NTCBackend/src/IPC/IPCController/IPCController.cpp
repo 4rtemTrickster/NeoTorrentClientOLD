@@ -1,6 +1,7 @@
 ﻿#include "NTCpch.h"
 #include "IPCController.h"
 
+#include "AppSettings/AppSettings.h"
 #include "IPC/MessageQueue/MessageQueue.h"
 
 namespace NTC
@@ -20,7 +21,7 @@ namespace NTC
     void IPCController::RunImp()
     {
         NTC_PROFILE_FUNCTION();
-        while (true)
+        while (AppSettings::bIsWorking)
         {
             zmq::message_t request;
 
@@ -34,7 +35,11 @@ namespace NTC
             else
                 NTC_WARN("Recived frontend: NONE");
 
-            if (request.to_string() == "App closes") break;
+            if (request.to_string() == "App closes")
+            {
+                NTC_TRACE("App closes");
+                AppSettings::bIsWorking = false;
+            }
         }
 
         NTC_TRACE("Message input is ended");

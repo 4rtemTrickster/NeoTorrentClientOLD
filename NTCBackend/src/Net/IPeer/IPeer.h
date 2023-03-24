@@ -9,10 +9,10 @@ namespace NTC
     class IPeer : public IComp<T>
     {
     public:
-        IPeer(uint16_t port, std::string&& handshakeMsg);
-        virtual ~IPeer() override { Stop(); }
+        IPeer(uint16_t port);
+        virtual ~IPeer() override;
 
-        bool Connect(const std::string& ip, const uint16_t port);
+        bool Connect(const std::string& ip, const uint16_t port, std::string&& handshakeMsg);
 
         bool Start();
         void Stop();
@@ -41,8 +41,6 @@ namespace NTC
         virtual void OnMessage(Ref<Connection<T>> src, Message<T> msg)
         {
         }
-
-        std::string HandshakeMsg{};
         
         containers::ThreadSafeQueue<OwnedMessage<T>> qMessagesIn_;
         std::deque<Ref<Connection<T>>> deqConnections_;
@@ -56,13 +54,20 @@ namespace NTC
     };
     
     template <typename T>
-    IPeer<T>::IPeer(uint16_t port, std::string&& handshakeMsg)
-        : HandshakeMsg(std::move(handshakeMsg)), asioAcceptor_(asioContext_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
+    IPeer<T>::IPeer(uint16_t port)
+        : asioAcceptor_(asioContext_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
     {
     }
 
     template <typename T>
-    bool IPeer<T>::Connect(const std::string& ip, const uint16_t port)
+    IPeer<T>::~IPeer()
+    {
+        if (!asioContext_.stopped())
+            Stop();
+    }
+
+    template <typename T>
+    bool IPeer<T>::Connect(const std::string& ip, const uint16_t port, std::string&& handshakeMsg)
     {
         using namespace boost::asio::ip;
 
@@ -73,7 +78,7 @@ namespace NTC
             tcp::resolver::results_type endpoint = resolver.resolve(ip, std::to_string(port));
 
             Ref<Connection<T>> connection = CreateRef<Connection<T>>(
-                std::move(std::string(HandshakeMsg)),
+                std::move(std::string(handshakeMsg)),
                 Connection<T>::Direction::D_Out,
                 asioContext_,
                 tcp::socket(asioContext_),
@@ -132,7 +137,8 @@ namespace NTC
                 {
                     NTC_TRACE("New connection: {0}", socket.remote_endpoint());
                     Ref<Connection<T>> newConn = CreateRef<Connection<T>>(
-                        std::move(std::string(HandshakeMsg)),
+                        //TODO: now we are responding with "" to close the connection
+                        std::move(std::string()),
                         Connection<T>::Direction::D_In,
                         asioContext_,
                         std::move(socket),

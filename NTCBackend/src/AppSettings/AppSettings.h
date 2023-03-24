@@ -5,6 +5,8 @@ namespace NTC
     class AppSettings
     {
     public:
-        static std::string ClientId;;
+        static std::string ClientId;
+        static uint16_t Port;
+        static bool bIsWorking;
     };
 }

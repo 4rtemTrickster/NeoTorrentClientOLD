@@ -4,11 +4,13 @@
 #include "FrontendProcess/FrontendProcessLauncher/FrontendProcessLauncher.h"
 #include "IPC/IPCController/IPCController.h"
 #include "IPC/IPCMessageDispatcher/IPCMessageDispatcher.h"
+#include "Torrent/TorrentPeer/TorrentPeer.h"
 
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int cmdShow)
 {
     std::future<std::invoke_result_t<void(*)()>> IPCC;
+    std::future<void> NetP;
     try
     {
         NTC_PROFILE_BEGIN_SESSION("Launch", "../Profiling/Startup.json");
@@ -29,6 +31,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
         std::uniform_int_distribution distrib(1, 9);
         for (int i = 0; i < 12; i++)
             NTC::AppSettings::ClientId += std::to_string(distrib(gen));
+
+        NTC::AppSettings::Port = 8080;
+
+        NetP = NTC::ThreadPool::submit(&NTC::TorrentPeer::StartLoop);
 
         NTC_PROFILE_END_SESSION();
 
