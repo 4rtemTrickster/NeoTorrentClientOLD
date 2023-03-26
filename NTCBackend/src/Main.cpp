@@ -9,7 +9,7 @@
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int cmdShow)
 {
-    std::future<std::invoke_result_t<void(*)()>> IPCC;
+    std::future<void> IPCC;
     std::future<void> NetP;
     try
     {
@@ -46,12 +46,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
         NTC::IPCMessageDispatcher::Run();
 
+        NetP.wait();
         IPCC.wait();
 
         NTC_PROFILE_END_SESSION();
     }
     catch (std::exception& e)
     {
+        NetP.wait();
         IPCC.wait();
         NTC_ERROR(e.what());
     }

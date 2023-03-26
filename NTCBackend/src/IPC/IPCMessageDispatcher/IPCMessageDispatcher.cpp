@@ -21,7 +21,7 @@ namespace NTC
         {
             try
             {
-                MessageQueue::PopMessage(Message);
+                MessageQueue::WaitAndPopMessage(Message);
                 LOG_MESSAGE("Poped message: " + Message);
 
                 MessageProc(Message);

@@ -6,6 +6,7 @@
 
 namespace NTC
 {
+    //TODO: YOU NEED TO IMPROVE THAT PIECE OF SHIT!!!!!!!!!!!!!!!!!
     class ThreadPool
     {
     public:

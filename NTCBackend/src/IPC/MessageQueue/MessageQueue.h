@@ -13,7 +13,8 @@ namespace NTC
     public:
         MessageQueue() = delete;
 
-        static void PopMessage(MessageQueue_t::value_type& message);
+        static void WaitAndPopMessage(MessageQueue_t::value_type& message);
+        static bool TryPopMessage(MessageQueue_t::value_type& message);
         static void AddMessage(const MessageQueue_t::value_type& message);
         
     protected:
